@@ -9,7 +9,7 @@
     {
       "name": "tinto-guest-communication",
       "source": "./plugins/tinto-guest-communication",
-      "description": "Nélia's guide to guest and winery-client communications, client itinerary PDFs, and booking-page publishing."
+      "description": "Nélia's guide to guest and winery-client communications, client itinerary PDFs, and adding winery records."
     },
     {
       "name": "tinto-logistics",
