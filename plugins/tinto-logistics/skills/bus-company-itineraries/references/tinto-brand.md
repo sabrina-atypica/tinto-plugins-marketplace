@@ -1,6 +1,6 @@
 # Tinto Travels Document Brand Reference
 
-Shared with the Guest Communication plugin's `guest-itinerary-pdf` skill — kept in sync if either changes. Established for the Pre/Post-Tour Planning Guide redesign (2026-08-24) and carried forward as Tinto's standard for branded PDF output.
+Shared with the Guest Communication plugin's `client-itinerary-pdf` skill — kept in sync if either changes. Established for the Pre/Post-Tour Planning Guide redesign (2026-08-24) and carried forward as Tinto's standard for branded PDF output.
 
 ## Palette
 

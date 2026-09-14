@@ -1,5 +1,5 @@
 ---
-name: guest-itinerary-pdf
+name: client-itinerary-pdf
 description: >
   This skill should be used when Peter or Nélia says "create a new itinerary
   PDF for [tour/winery]," "we're about to sell [tour]," "we're trying to
@@ -10,12 +10,12 @@ description: >
   client-supplied source itinerary PDFs (e.g. the "Fox Run Vineyards
   presents..." style document).
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
-# Guest Itinerary PDF
+# Client Itinerary PDF
 
-Produce the guest-facing itinerary for one **specific tour** — dated, with the real suppliers/hotels confirmed for that departure, a cover page of overview/pricing/inclusions, and the day-by-day schedule — as a branded PDF attachment. Match the structure and tone of Tinto's existing client-supplied source itinerary PDFs (e.g. `2027 02 22 Fox Run alentejo portugal.pdf`), not a plain day-by-day list.
+Produce the itinerary document for one **specific tour** — dated, with the real suppliers/hotels confirmed for that departure, a cover page of overview/pricing/inclusions, and the day-by-day schedule — as a branded PDF. **The primary recipient is the selling client (the winery, alumni association, etc.), not Tinto** — they use it to sell the tour and pass it on to their own prospective guests, so the document has to be sale-ready and correctly branded before it goes anywhere, not just accurate. Match the structure and tone of Tinto's existing client-supplied source itinerary PDFs (e.g. `2027 02 22 Fox Run alentejo portugal.pdf`), not a plain day-by-day list.
 
 **This document gets built through a short conversation, not from a single request.** The flow below is the whole point of this skill: it exists so nothing gets guessed or inferred that should have been asked. Follow it every time, in order, even when the request already seems to include some of the answers — confirm rather than assume, because a wrong winery, a wrong price, or an unconfirmed itinerary on a guest-facing PDF is a real error, not a formatting detail.
 
