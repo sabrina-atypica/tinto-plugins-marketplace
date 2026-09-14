@@ -1,5 +1,6 @@
 {
   "name": "tinto-travels-plugins",
+  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts — guest communication and supplier logistics plugins, installable independently by each team member.",
   "owner": {
     "name": "Sabrina Boesch",
     "email": "sabrina.boesch@gmail.com"
