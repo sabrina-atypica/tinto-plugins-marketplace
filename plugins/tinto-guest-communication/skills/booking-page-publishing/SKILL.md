@@ -6,7 +6,7 @@ description: >
   bookable yet," or needs to audit and publish a tour's public sign-up/
   booking page.
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Booking Page Readiness and Publishing
@@ -64,7 +64,7 @@ Once every checklist item passes and the webhook issue above is confirmed fixed:
    - `401` — the key is missing or wrong. Re-read it from Automation Config; if it still fails, the Cloudflare-side secret may have changed and needs Sabrina/Peter.
    - `500` — a server-side problem (e.g. the Worker's own `PUBLISH_API_KEY` secret unset). Stop and flag this rather than retrying repeatedly — it's not something this skill can fix.
    - **A request that fails partway on an image-heavy tour** (e.g. Damiani, District Pit — many packages/photos) can hit Cloudflare's per-invocation subrequest cap. This is self-healing: `copyToR2` skips images it's already copied, so simply calling the endpoint again converges. Retry up to 2–3 times before treating it as a real failure rather than a transient cap.
-4. **Verify the live page, don't just trust the API response** — `curl` (or fetch) the returned `url` and confirm it's a real 200 with recognizable content (the tour's actual name/branding), not a fallback or an error page. This is the same "watch it actually work, don't just trust the design" habit this whole engagement has used for every other automated write.
+4. **Verify the live page, don't just trust the API response — this step is not optional.** `curl` (or fetch) the returned `url` and confirm it's a real 200 with recognizable content (the tour's actual name/branding, and if this is a republish, the specific content that changed), not a fallback, an error page, or stale content. There's a known, documented routing trap (`deploy-runbook.md`, 2026-08-06) where a static file previously committed into the site's `public/` folder for that same slug wins over anything served from Airtable — in that case `/api/publish-tour` reports `success: true` and genuinely writes the new HTML into the tour's `Page HTML` field, but the live page silently keeps showing the old static content, with no error anywhere in the chain. The only way to catch this is exactly this step: actually looking at the live URL, not trusting a `200`/`success` response. If a republish doesn't seem to have changed anything on the live page, this static-file conflict is the first thing to suspect — flag it rather than repeating the publish call, since repeating it will keep reporting success and keep not working.
 5. **Set `Publish Status`** on the Tour record to reflect reality — the field's options are `Draft`, `Preview`, `Published`, `Archived`. Use `Published` once step 4 confirms the live page is correct; use `Preview` if this is a deliberate soft-launch not yet meant for real traffic (check with Sabrina/Peter/Nina if unsure which one applies).
 
 **Note for whoever installs this plugin:** this publish step runs as a shell command (`curl`), which is part of the standard Cowork workspace, not a connector — it doesn't need the Airtable or Gmail connector to be scoped any differently, and it doesn't need a device bridge, repo access, or GitHub at all.
