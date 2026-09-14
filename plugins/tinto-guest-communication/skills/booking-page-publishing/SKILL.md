@@ -37,7 +37,7 @@ Pull the tour's record from the production Airtable base and check each of these
 | Linked `Itinerary Days` | Populated, matches the tour's actual confirmed schedule | Guests see no day-by-day content, or content that doesn't match what they booked |
 | Linked `Packages` | At least one row, `Live Status` = Bookable (not Pre-registration or another status) | Nothing for checkout to sell — page renders but guests can't book |
 
-**Also check, not blocking but worth knowing:** whether the tour's `Packages` rows share a hotel room block across Double/Solo occupancy types — if so, their `Capacity` fields may double-count the same physical rooms (a known data-model issue as of 2026-09-10, see the `rooming-lists` skill in the Logistics plugin for detail). This doesn't block publishing, but means any "X rooms left" messaging shouldn't be trusted without checking with Sabrina first.
+**Also check, not blocking but worth knowing:** "X rooms left" style messaging should read capacity from the `Room Blocks` table (one shared `Capacity` per physical room block, linked to the Tour and its `Packages` rows) — not from `Packages.Capacity (deprecated - use Room Block)`, which is deprecated precisely because it used to double-count Double/Solo rows sharing one physical block (see the `rooming-lists` skill in the Logistics plugin for detail). If the tour has no linked Room Block yet, or its Capacity is blank, don't show a remaining-rooms number at all rather than guessing.
 
 ## Publishing
 

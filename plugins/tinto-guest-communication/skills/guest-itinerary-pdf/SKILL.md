@@ -9,7 +9,7 @@ description: >
   touchpoints, in the style of the client-supplied source itinerary PDFs
   (e.g. the "Fox Run Vineyards presents..." style document).
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Guest Itinerary PDF
@@ -34,19 +34,21 @@ Tinto sells tours white-labeled under the selling client's own brand (a winery, 
 **Primary source of truth: the production Airtable base.** Pull the tour's own header and cover-page details from the `Tours` record:
 
 - `Overview` — the narrative summary for the cover page.
-- `Price per Person` — use the existing convention (lowest bookable room price for a tour with a price range, same rule `booking-page-publishing` applies).
-- Single supplement — derive from the price difference between the tour's Double and Solo `Packages` rows where available, rather than assuming a fixed number; if no clean Double/Solo pair exists, flag it rather than guess.
+- `Price per Person` — a direct currency field on `Tours`. Use it as-is; the "lowest bookable room price" convention (see `booking-page-publishing`) only matters as a fallback for a tour whose own `Price per Person` is blank but which has a real price range across `Packages`.
+- `Single Supplement` — also a direct currency field on `Tours`, not something to derive — use it directly rather than computing it from Double/Solo `Packages` rows. Only fall back to a Packages-based estimate if this field is blank and a clean Double/Solo pair exists; otherwise leave the single-supplement line off rather than guessing.
 - `What's Included` / `What's Not Included` — cover-page inclusions list.
-- Any participant cap or similar sales-copy field — check the live `Tours` schema for what's actually there rather than assuming a fixed field name; if nothing like it exists, leave it off rather than inventing a number.
+- `Max Participants` — a direct number field on `Tours`; include it on the cover page the way the source itinerary PDFs do ("Limited to N participants") if it's populated.
 
-Then pull the day-by-day content from `Itinerary Days`, filtered to the requested tour, in `Day #` / `Time Slot` order. Each row carries the guest-facing narrative (`Guest-Facing Title`, `Guest-Facing Description`) already written in marketing voice — use this content directly rather than rewriting it, unless Nélia asks for a change.
+Then pull the day-by-day content from `Itinerary Days`, filtered to the requested tour by its linked `Tour` field, ordered by `Day #`. Each row carries `Title` and `Description` — already written in marketing voice — use this content directly rather than rewriting it, unless Nélia asks for a change. (`Itinerary Days` has no time-of-day field — that granularity only exists on the operational `Bookings (Confirmations)`/`Standard Itineraries` tables, not here.)
 
-Check both tables directly for the specific tour rather than assuming it matches the destination's usual pattern — a given tour can diverge from the standard schedule or pricing once real bookings are in. If a day or a cover-page field looks like it's missing, or content looks like a placeholder rather than real copy, flag it to Nélia rather than inventing filler.
+Check both tables directly for the specific tour rather than assuming it matches the destination's usual pattern — a given tour can diverge from the standard schedule or pricing once real bookings are in. If a day or a cover-page field looks like it's missing, or content looks like a placeholder rather than real copy, flag it to Nélia rather than inventing filler. **Don't trust a `Notes` field's description of what's populated over the actual field values** — Notes can go stale (e.g. a migration note saying a field was "left blank" after that field was since filled in); always read the live field, not what a note says about it.
+
+**Apply Tinto's standing no-em-dash, no-gratuity-mention copy rules to `What's Included`/`What's Not Included` and `Overview` even if the stored text doesn't yet follow them.** That cleanup (see `whats-included-accommodation-audit.md`) was only applied to a specific 12-tour batch so far — plenty of tours, including ones with real cover-page data, still have raw em dashes or a "gratuity included" mention in these fields. Rewrite on the way into the PDF (comma, colon, or sentence split in place of an em dash or "--"; delete gratuity mentions outright rather than rephrasing around them) rather than reproducing the field verbatim, and mention to Nélia that the source field itself is still due for the same cleanup.
 
 ## Document structure
 
 - **Cover page**: client logo/branding, tour title and dates, one-paragraph overview, price per person (and single supplement if determinable), what's included / not included. Guest name(s) only if producing a personalized copy for one reservation (check whether Nélia wants one shared PDF for the whole departure or a personalized one per guest — ask if unclear).
-- **Day-by-day section**: one entry per day, in order — day number and date, guest-facing title, guest-facing description.
+- **Day-by-day section**: one entry per day, in order — day number, title, description.
 - **Closing section**: Tinto contact information / emergency contact, matching the convention used in Tinto's other guest-facing documents.
 
 ## Branding assets and layout
