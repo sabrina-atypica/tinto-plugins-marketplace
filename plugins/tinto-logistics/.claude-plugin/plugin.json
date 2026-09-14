@@ -1,7 +1,7 @@
 {
   "name": "tinto-logistics",
-  "version": "0.1.0",
-  "description": "Tamara's guide to Tinto Travels' supplier-side operations — the supplier reconfirmation cycle (hotels, restaurants, wineries-as-venue, transport, cultural sites), rooming lists, and transport-company itineraries.",
+  "version": "0.4.0",
+  "description": "Tamara's guide to Tinto Travels' automated supplier communications — confirming which suppliers actually belong to which tour, checking what's due each day, drafting supplier emails correctly (English-first, thread-aware), reviewing/sending, and batch-booking hotel rooms. Also bundles rooming-lists and bus-company-itineraries, still their original placeholder design pending a separate rebuild.",
   "author": {
     "name": "Tinto Travels"
   }
