@@ -6,7 +6,7 @@ description: >
   bookable yet," or needs to audit and publish a tour's public sign-up/
   booking page.
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Booking Page Readiness and Publishing
@@ -45,6 +45,16 @@ Pull the tour's record from the production Airtable base and check each of these
 | Linked `Packages` | At least one row, `Live Status` = Bookable (not Pre-registration or another status) | Nothing for checkout to sell — page renders but guests can't book |
 
 **Also check, not blocking but worth knowing:** "X rooms left" style messaging should read capacity from the `Room Blocks` table (one shared `Capacity` per physical room block, linked to the Tour and its `Packages` rows) — not from `Packages.Capacity (deprecated - use Room Block)`, which is deprecated precisely because it used to double-count Double/Solo rows sharing one physical block (see the `rooming-lists` skill in the Logistics plugin for detail). If the tour has no linked Room Block yet, or its Capacity is blank, don't show a remaining-rooms number at all rather than guessing.
+
+## When a tour isn't ready: propose fixes, don't just list gaps
+
+A flat pass/fail report on the checklist above isn't the deliverable — a concrete, ready-to-confirm fix for each gap is. What "propose" means differs by field, because some of these are conventions Tinto already applies consistently and some are real business/financial data that varies tour to tour:
+
+- **Slug** — derive it from the established convention, don't ask what it should be. Pull the Tours records that already have a Slug set and confirm the pattern directly rather than assuming it's still `{location-slug}-{client-slug}-{YYYY}-{MM}` (client name stripped of generic type words like Vineyards/Cellars/Winery; a trailing `-2` etc. disambiguates a collision on location+client+month). Propose the specific slug this tour would get, check it doesn't collide with an existing one, and present it — "Slug would be `alentejo-vaux-hall-2027-10` — correct, or does this need adjusting?" Don't gate this behind "should I write this?"; propose it as the default and only change course if corrected.
+- **Tour Highlights** — same default-and-confirm pattern, sourced from precedent rather than pure convention: look for another tour to the *same destination* (ideally one whose itinerary this tour's `Itinerary Days` were copied from or closely matches) and propose its Tour Highlights as the starting point for this tour. Present it plainly — "Tour Highlights would default to the same 5 points as [other tour] since this itinerary follows the same route: [list]. Correct as-is, or does this tour need its own updates?" — again, not a permission gate to write, a proposal to confirm or correct.
+- **Packages** — never do this. Don't infer a property, room type, or price from another tour's Packages, even one that shares the same destination, itinerary, or client-type pattern. This is real financial/booking data tied to an actual contracted rate for this specific tour, and a wrong guess here is a wrong price a guest could actually pay. Ask directly instead: which property/room block is this tour using, and what's the confirmed per-person price for Double and Solo occupancy? If the answer isn't known yet (e.g. still being negotiated, or the tour's `Status` isn't `Confirmed`), say so and treat Packages as blocked pending that answer — don't fill in a placeholder in the meantime.
+
+This distinction — auto-propose-and-confirm for Slug/Tour Highlights, always-ask-directly for Packages — is a permanent behavior for this skill, not a one-off judgment call to make fresh each time.
 
 ## Publishing
 
