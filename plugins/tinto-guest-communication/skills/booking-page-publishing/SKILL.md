@@ -6,7 +6,7 @@ description: >
   bookable yet," or needs to audit and publish a tour's public sign-up/
   booking page.
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # Booking Page Readiness and Publishing
@@ -46,15 +46,19 @@ Pull the tour's record from the production Airtable base and check each of these
 
 **Also check, not blocking but worth knowing:** "X rooms left" style messaging should read capacity from the `Room Blocks` table (one shared `Capacity` per physical room block, linked to the Tour and its `Packages` rows) — not from `Packages.Capacity (deprecated - use Room Block)`, which is deprecated precisely because it used to double-count Double/Solo rows sharing one physical block (see the `rooming-lists` skill in the Logistics plugin for detail). If the tour has no linked Room Block yet, or its Capacity is blank, don't show a remaining-rooms number at all rather than guessing.
 
-## When a tour isn't ready: propose fixes, don't just list gaps
+## When a tour isn't ready: a specific suggestion for every gap, not a checklist of failures
 
-A flat pass/fail report on the checklist above isn't the deliverable — a concrete, ready-to-confirm fix for each gap is. What "propose" means differs by field, because some of these are conventions Tinto already applies consistently and some are real business/financial data that varies tour to tour:
+A flat pass/fail report isn't the deliverable. **Every single gap gets a specific, concrete suggested value that Nélia only has to confirm or correct** — never a bare "this is missing" and never an open-ended "what should this be?" with nothing proposed. The work this skill does before reporting a gap is: check what real information is actually available for *this* tour first, then fall back to precedent/convention to fill in a specific candidate — always land on a proposal, calibrated by how confident that proposal actually is.
 
-- **Slug** — derive it from the established convention, don't ask what it should be. Pull the Tours records that already have a Slug set and confirm the pattern directly rather than assuming it's still `{location-slug}-{client-slug}-{YYYY}-{MM}` (client name stripped of generic type words like Vineyards/Cellars/Winery; a trailing `-2` etc. disambiguates a collision on location+client+month). Propose the specific slug this tour would get, check it doesn't collide with an existing one, and present it — "Slug would be `alentejo-vaux-hall-2027-10` — correct, or does this need adjusting?" Don't gate this behind "should I write this?"; propose it as the default and only change course if corrected.
-- **Tour Highlights** — same default-and-confirm pattern, sourced from precedent rather than pure convention: look for another tour to the *same destination* (ideally one whose itinerary this tour's `Itinerary Days` were copied from or closely matches) and propose its Tour Highlights as the starting point for this tour. Present it plainly — "Tour Highlights would default to the same 5 points as [other tour] since this itinerary follows the same route: [list]. Correct as-is, or does this tour need its own updates?" — again, not a permission gate to write, a proposal to confirm or correct.
-- **Packages** — never do this. Don't infer a property, room type, or price from another tour's Packages, even one that shares the same destination, itinerary, or client-type pattern. This is real financial/booking data tied to an actual contracted rate for this specific tour, and a wrong guess here is a wrong price a guest could actually pay. Ask directly instead: which property/room block is this tour using, and what's the confirmed per-person price for Double and Solo occupancy? If the answer isn't known yet (e.g. still being negotiated, or the tour's `Status` isn't `Confirmed`), say so and treat Packages as blocked pending that answer — don't fill in a placeholder in the meantime.
+For each missing or incomplete checklist field:
 
-This distinction — auto-propose-and-confirm for Slug/Tour Highlights, always-ask-directly for Packages — is a permanent behavior for this skill, not a one-off judgment call to make fresh each time.
+1. **Check this tour's own record first** — `Notes`, any other free-text field, attachments, or related records (e.g. a linked Client's Notes) sometimes already contain the real answer (a confirmed rate, a decided property, a draft description) that just hasn't been copied into the structured field yet. This is the highest-confidence source — use it directly if it's there rather than falling through to precedent.
+2. **If nothing tour-specific is on file, look for real precedent** — another tour to the same destination, especially one this tour's itinerary was copied from or closely follows — and propose that as the starting point.
+3. **Present the proposal with its source, and ask for confirmation or correction, not permission to proceed.** E.g. "Slug would be `alentejo-vaux-hall-2027-10`, following the standard `{location}-{client}-{year}-{month}` pattern — correct, or does this need adjusting?" or "Tour Highlights would default to the same 5 points as [other tour], since this itinerary follows the same route — correct as-is, or does this tour need its own updates?" Don't gate this behind "should I write this?" — propose it as the default and only change course if Nélia corrects it.
+
+**Packages is the one field where step 2 (precedent) is not a safe substitute for step 1 (this tour's own confirmed data)** — it's real financial/booking data tied to an actual contracted rate, and a wrong number here is a wrong price a guest could actually pay. So: still check this tour's own record and Notes for a rate that's already been confirmed and just not entered yet — if it's there, propose it directly, sourced. If it's genuinely not on file anywhere for this tour, still make a specific suggestion rather than leaving it blank, but make the precedent-based nature of the guess and its confidence explicit rather than presenting it as equally solid: "No confirmed rate on file for this tour. The same property/room (Mar de Ar Aqueduto, Standard) is used on [other Alentejo tour] at $X Double / $Y Solo — proposing that as a placeholder, but this needs an explicit confirm from the actual contract/quote before it's treated as real, not just a correct-or-not check." If the tour's own `Status` isn't `Confirmed` yet, say that plainly alongside the proposal — a specific number doesn't mean it's safe to publish against.
+
+This is a permanent behavior for this skill, not a one-off judgment call to make fresh each time: check available information first, always land on a specific proposal for every gap, and scale down confidence/caveat the proposal rather than withholding it when the only source is precedent instead of this tour's own confirmed data.
 
 ## Publishing
 
