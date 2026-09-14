@@ -1,0 +1,8 @@
+{
+  "name": "tinto-booking-pages",
+  "version": "0.1.0",
+  "description": "Auditing a tour's Airtable data against booking-page requirements and publishing it live via the /api/publish-tour endpoint (Airtable + a shell curl call — no GitHub needed). A standalone plugin, separate from Nélia's tinto-guest-communication, for whoever handles tour-page publishing (Sabrina/Peter/Nina).",
+  "author": {
+    "name": "Tinto Travels"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "tinto-guest-communication",
-  "version": "0.5.1",
-  "description": "Nélia's guide to Tinto Travels' automated guest and winery communications — checking what's due each day, drafting and sending guest/winery emails correctly, building client itinerary PDFs, auditing and publishing tour booking pages, and adding winery records.",
+  "version": "0.6.0",
+  "description": "Nélia's guide to Tinto Travels' automated guest and winery communications — checking what's due each day, drafting and sending guest/winery emails correctly, building client itinerary PDFs, and adding winery records.",
   "author": {
     "name": "Tinto Travels"
   }

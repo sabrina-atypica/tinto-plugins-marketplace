@@ -1,6 +1,6 @@
 {
   "name": "tinto-travels-plugins",
-  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts — guest communication and supplier logistics plugins, installable independently by each team member.",
+  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts — guest communication, supplier logistics, and booking-page publishing plugins, installable independently by each team member.",
   "owner": {
     "name": "Sabrina Boesch",
     "email": "sabrina.boesch@gmail.com"
@@ -15,6 +15,11 @@
       "name": "tinto-logistics",
       "source": "./plugins/tinto-logistics",
       "description": "Tamara's guide to supplier communications, rooming lists, and transport-company itineraries."
+    },
+    {
+      "name": "tinto-booking-pages",
+      "source": "./plugins/tinto-booking-pages",
+      "description": "Auditing a tour's booking-page readiness and publishing it live — a standalone plugin for whoever handles publishing, separate from Nélia's guest communication plugin."
     }
   ]
 }
