@@ -14,7 +14,7 @@ This plugin covers Nélia's day-to-day operation of the guest journey: checking 
 |---|---|
 | `daily-guest-communications` | The core process: how the daily scheduler decides what's due, drafting into Gmail, reviewing/sending, attachment handling, and the line between what Nélia can change herself and what stays with Peter/Nina. |
 | `add-winery-record` | Entering an already-agreed winery client's record and branding into Airtable. |
-| `guest-itinerary-pdf` | Building the dated, tour-specific day-by-day itinerary PDF for a booked tour — distinct from the destination-level Pre/Post-Tour Planning Guide. |
+| `guest-itinerary-pdf` | Building the dated, tour-specific day-by-day itinerary PDF for a tour that's about to sell, being pitched, or already sold — distinct from the destination-level Pre/Post-Tour Planning Guide. Walks through a short confirmation conversation (winery/client, then date/location/price/capacity/itinerary) before building anything, and web-searches branding for a brand-new winery rather than guessing. |
 | `booking-page-publishing` | Auditing a tour's Airtable data against booking-page requirements and publishing it live, with explicit warnings about the current webhook and repo-access caveats. |
 
 No agents or hooks — enforcement of what Nélia can and can't change is already handled by her Airtable seat permissions (add/delete data, no schema changes), not by anything in this plugin.
@@ -31,7 +31,7 @@ Ask Claude things like:
 - "Check today's guest emails" / "What's due today?" — runs the daily check and drafting.
 - "Why didn't [guest] get an email?" / "Is this a duplicate?" — troubleshoots using the same skill.
 - "Add [winery] as a new client, here's their logo" — files a winery record and branding.
-- "Create the itinerary PDF for [tour]" — builds the tour-specific day-by-day guest document.
+- "Create a new itinerary PDF for a tour we're trying to sell" / "...for [tour]" — walks through confirming the winery, dates, location, price, capacity, and itinerary one question at a time, then builds the tour-specific day-by-day guest document.
 - "Is [tour]'s booking page ready? Publish it" — audits and, where possible, publishes.
 
 ## Not in this plugin
