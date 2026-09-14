@@ -2,6 +2,8 @@
 
 Shared with the Logistics plugin's `bus-company-itineraries` skill — kept in sync if either changes. Established for the Pre/Post-Tour Planning Guide redesign (2026-08-24) and carried forward as Tinto's standard for branded PDF output.
 
+**For `guest-itinerary-pdf` specifically: this is the fallback/base system, not the default.** That skill's documents are sold under a client's own brand (Fox Run Vineyards, Boordy, etc.) and should use the tour's linked Client logo/accent color first — see the "Branding" section in `guest-itinerary-pdf`'s SKILL.md. Use this Tinto palette/typeface system as the base layout and typography, and as the fallback when a tour has no usable client branding on file.
+
 ## Palette
 
 | Role | Name | Hex |
