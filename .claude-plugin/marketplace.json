@@ -1,0 +1,19 @@
+{
+  "name": "tinto-travels-plugins",
+  "owner": {
+    "name": "Sabrina Boesch",
+    "email": "sabrina.boesch@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "tinto-guest-communication",
+      "source": "./plugins/tinto-guest-communication",
+      "description": "Nélia's guide to guest and winery-client communications, guest itinerary PDFs, and booking-page publishing."
+    },
+    {
+      "name": "tinto-logistics",
+      "source": "./plugins/tinto-logistics",
+      "description": "Tamara's guide to supplier communications, rooming lists, and transport-company itineraries."
+    }
+  ]
+}
