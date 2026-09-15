@@ -32,7 +32,7 @@ The Gmail draft never contains these — they're delivered to Nélia separately 
 
 - **Welcome** — Pre-Trip Guide PDF
 - **6-Weeks-Out** — Pre-Trip Guide PDF (again)
-- Any touchpoint carrying trip logistics — itinerary PDF (build this with the `client-itinerary-pdf` skill, elsewhere in this plugin, if it doesn't already exist for the tour)
+- Any touchpoint carrying trip logistics — itinerary PDF (build this with the `client-itinerary-pdf` skill, from the separate `tinto-client-itinerary-pdf` plugin, if it doesn't already exist for the tour)
 - **Approval Request** (winery-facing) — the merged post-trip email draft rides along with this one
 
 If a touchpoint isn't listed here, it likely doesn't need an attachment — but when in doubt, check rather than assume either way.

@@ -1,0 +1,8 @@
+{
+  "name": "tinto-client-itinerary-pdf",
+  "version": "0.1.0",
+  "description": "Building the dated, tour-specific day-by-day itinerary PDF for a tour that's about to sell, being pitched, or already sold — the document the selling client uses to sell the tour and pass on to their own guests. Split out of tinto-guest-communication so it can be installed on its own — e.g. for Peter, who needs this without the rest of Nélia's daily guest-communication scope.",
+  "author": {
+    "name": "Tinto Travels"
+  }
+}

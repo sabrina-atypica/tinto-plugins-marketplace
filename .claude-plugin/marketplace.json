@@ -1,6 +1,6 @@
 {
   "name": "tinto-travels-plugins",
-  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts — guest communication, supplier logistics, and booking-page publishing plugins, installable independently by each team member.",
+  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts — guest communication, supplier logistics, booking-page publishing, winery-record entry, and client itinerary PDF plugins, each installable independently by whoever needs it.",
   "owner": {
     "name": "Sabrina Boesch",
     "email": "sabrina.boesch@gmail.com"
@@ -9,7 +9,7 @@
     {
       "name": "tinto-guest-communication",
       "source": "./plugins/tinto-guest-communication",
-      "description": "Nélia's guide to guest and winery-client communications, client itinerary PDFs, and adding winery records."
+      "description": "Nélia's guide to daily guest and winery-client email communications."
     },
     {
       "name": "tinto-logistics",
@@ -20,6 +20,16 @@
       "name": "tinto-booking-pages",
       "source": "./plugins/tinto-booking-pages",
       "description": "Auditing a tour's booking-page readiness and publishing it live — a standalone plugin for whoever handles publishing, separate from Nélia's guest communication plugin."
+    },
+    {
+      "name": "tinto-add-winery-record",
+      "source": "./plugins/tinto-add-winery-record",
+      "description": "Entering an already-agreed winery client's record and branding into Airtable — a standalone plugin, installable on its own by anyone who needs it (e.g. Peter)."
+    },
+    {
+      "name": "tinto-client-itinerary-pdf",
+      "source": "./plugins/tinto-client-itinerary-pdf",
+      "description": "Building the dated, tour-specific client itinerary PDF used to sell a tour — a standalone plugin, installable on its own by anyone who needs it (e.g. Peter)."
     }
   ]
 }
