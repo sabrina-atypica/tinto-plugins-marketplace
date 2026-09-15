@@ -1,7 +1,7 @@
 {
   "name": "tinto-rooming-lists",
-  "version": "0.4.0",
-  "description": "Producing a per-tour rooming list with passport details, matching Tinto's real rooming-list format: room/guest/bed-configuration summary plus per-guest passport data, delivered as a two-tab workbook (English and the hotel's own local language). A standalone plugin, open to anyone on the team who needs it. Rebuilt 2026-09-15 against a real reference template and live production schema.",
+  "version": "0.4.1",
+  "description": "Producing a per-tour rooming list with passport details, matching Tinto's real rooming-list format: room/guest/bed-configuration summary plus per-guest passport data, delivered as a two-tab workbook (English and the hotel's own local language, each with its own translated fallback marker for passport data not yet in hand). A standalone plugin, open to anyone on the team who needs it. Rebuilt 2026-09-15 against a real reference template and live production schema.",
   "author": {
     "name": "Tinto Travels"
   }
