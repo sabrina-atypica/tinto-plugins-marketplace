@@ -7,7 +7,7 @@ description: >
   of which guests occupy which rooms to send to a hotel or use for
   logistics planning.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Rooming Lists
@@ -27,9 +27,10 @@ For each booked room, gather:
 - Occupancy Type (Double / Solo).
 - Bed Configuration (Double Bed / Twin Beds), if set — as of 2026-09-15 this field is blank on at least some destinations' `Packages` records (confirmed on the Alentejo tours). If it's blank, show the cell as blank and say so rather than guessing a configuration from Occupancy Type or leaving something that reads like an accidental omission.
 - A room number, if one exists. There's no structured room-number field anywhere in Airtable, but Reservations are commonly hand-labeled in their own `Notes` field as they're taken — "Room 1.", "Room 2.", "Room 6." is the real, confirmed convention on at least one live tour. Check each Reservation's Notes for a `Room N.` pattern at the start and pull the number if it's there. If a Reservation's Notes has no such marker, leave the room-number column blank — don't invent a sequence or assume booking order matches room order; a wrong invented number is worse than an honest blank.
+- `Food Restriction`, per guest, from the linked `Participants` record. Include this by default, not just internally — the hotels these lists go to typically provide breakfast (sometimes other meals), so dietary/allergy information is operationally relevant to the recipient, not just internal color. Leave the cell blank for a guest with nothing on file rather than writing "none" or otherwise implying it was confirmed absent.
 - Tour name and dates, for the spreadsheet header.
 
-**Also worth surfacing when populated, not just assumed absent:** each `Participants` record can carry `Room Request Tags` and `Room Request Notes` — a stated room preference (twin vs. double, ground floor, adjoining rooms, and so on). Pull these per participant and add them as a plain notes column when any exist for the tour; this is exactly the kind of detail a hotel or Tamara would want on the sheet, not internal-only color. `Participants.Food Restriction` also exists on the same table — don't fold it into the rooming list by default, since sending dietary/allergy data to an external party (a hotel) is a different disclosure decision than an internal note. If Tamara wants it included, confirm first whether the specific list is going externally or staying internal, and only add the column once that's clear.
+**Also worth surfacing when populated, not just assumed absent:** each `Participants` record can carry `Room Request Tags` and `Room Request Notes` — a stated room preference (twin vs. double, ground floor, adjoining rooms, and so on). Pull these per participant and add them as a plain notes column when any exist for the tour; this is exactly the kind of detail a hotel or Tamara would want on the sheet, not internal-only color.
 
 ## Building the spreadsheet
 
