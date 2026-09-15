@@ -1,7 +1,7 @@
 {
   "name": "tinto-rooming-lists",
-  "version": "0.3.0",
-  "description": "Producing a per-tour rooming list — which guests are booked into which room, at which property — as a spreadsheet to send to a hotel or use internally. A standalone plugin, open to anyone on the team who needs it. Rebuilt 2026-09-15 against live production schema and real bookings: guest names now pull from linked Participants records rather than the Reservation's own name field, room numbers are extracted from the existing 'Room N.' convention in Notes, and each guest's food restrictions are included by default since hotels typically provide breakfast.",
+  "version": "0.4.0",
+  "description": "Producing a per-tour rooming list with passport details, matching Tinto's real rooming-list format: room/guest/bed-configuration summary plus per-guest passport data, delivered as a two-tab workbook (English and the hotel's own local language). A standalone plugin, open to anyone on the team who needs it. Rebuilt 2026-09-15 against a real reference template and live production schema.",
   "author": {
     "name": "Tinto Travels"
   }

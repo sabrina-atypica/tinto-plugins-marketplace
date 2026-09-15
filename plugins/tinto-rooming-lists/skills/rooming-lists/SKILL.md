@@ -4,39 +4,50 @@ description: >
   This skill should be used when Tamara asks to "create a rooming list,"
   "put together the room list for [tour]," "who's in which room for
   [tour]," "send the hotel our rooming list," or needs a per-tour breakdown
-  of which guests occupy which rooms to send to a hotel or use for
-  logistics planning.
+  of which guests occupy which rooms, with passport details, to send to a
+  hotel or use internally.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Rooming Lists
 
-Produce a per-tour rooming list — which guests are booked into which room, at which property — as a spreadsheet Tamara can send to a hotel or use internally. This is a reporting task built from confirmed bookings, not a booking-management or capacity-planning tool: see "What this skill does not do" below before promising anything beyond the list itself.
+Produce a per-tour rooming list — which guests are booked into which room, at which property, with passport details for hotel check-in — as a spreadsheet Tamara can send to a hotel or use internally. This is a reporting task built from confirmed bookings, not a booking-management or capacity-planning tool: see "What this skill does not do" below before promising anything beyond the list itself.
+
+**Layout and conventions below are confirmed against a real Tinto rooming list** (`Rooming List_Linganore_08June.xlsx`, supplied 2026-09-15), not invented — match its structure rather than building a generic guests-and-rooms table.
 
 ## Where the data comes from
 
-**Primary source of truth: the production Airtable base.** For the requested tour, filter `Reservations` directly by its `Tour` link field — every Reservation links straight to its Tour, confirmed live, so there's no need to go through `Packages` to find them. Each linked Reservation represents **one room actually booked, not one traveler** — a Double-occupancy reservation is still one room, with two guests in it, not two rows.
+**Primary source of truth: the production Airtable base.** For the requested tour, filter `Reservations` directly by its `Tour` link field — every Reservation links straight to its Tour. Each linked Reservation represents **one room actually booked, not one traveler** — a Double-occupancy reservation is still one room, with two guests in it, not two rows.
 
-**Guest names come from the linked `Participants` records, never from the Reservation itself.** A Reservation's own `Buyer First Name`/`Buyer Last Name` fields hold a human-typed purchaser name, and in practice that field is often two people, a nickname, or an aside all run together — "Jennifer & Michael Howse," "William (Bill) & Chris Connor," "Dave & Kathy Muenz (Complimentary)" are all real examples. Don't parse guest names out of it. Every Reservation links to one `Participants` record per person actually traveling in that room, each with clean, separate First Name and Last Name fields — that's the real source for the sheet. The Buyer field is booking/contact metadata, useful for context, not for the guest-name column.
+**Room-summary data — room number, names, headcount, bed configuration — comes from the Reservation and its linked Package:**
 
-For each booked room, gather:
+- Room number: there's no structured room-number field in Airtable, but Reservations are commonly hand-labeled in their own `Notes` field as they're taken — "Room 1.", "Room 2." is a real, confirmed convention. Extract it from Notes when present (a `Room N.` pattern at the start); if a Reservation's Notes has no such marker, leave the room-number column blank rather than inventing a sequence.
+- Names: the Reservation's own `Buyer First Name`/`Buyer Last Name` fields — yes, the same free-text field that's unsuitable for the passport columns (see below) is exactly right here. It's the real, already-used convention for this summary column, relationship asides and all: "Matthew & Paulette Biscotti (employee same Melissa)," "KellyAnn Callahan & Cassidy Dunlop (mother/daughter)" are genuine examples from the reference template, and real production data shows the identical style ("Jennifer & Michael Howse," "Dave & Kathy Muenz (Complimentary)"). Use it as-is.
+- Headcount: the Reservation's `# of People`.
+- Bed configuration: from the linked `Packages` row's `Bed Configuration` field (choices confirmed live: "Double Bed," "Twin Beds"). If it's blank — confirmed blank on at least some destinations' Packages records as of 2026-09-15 — don't guess a configuration from Occupancy Type; leave it blank and flag it.
 
-- Guest name(s) in that room, one per linked Participant record (a Double room has two, a Solo room has one).
-- Property Name and Room Type (from the linked `Packages` row).
-- Occupancy Type (Double / Solo).
-- Bed Configuration (Double Bed / Twin Beds), if set — as of 2026-09-15 this field is blank on at least some destinations' `Packages` records (confirmed on the Alentejo tours). If it's blank, show the cell as blank and say so rather than guessing a configuration from Occupancy Type or leaving something that reads like an accidental omission.
-- A room number, if one exists. There's no structured room-number field anywhere in Airtable, but Reservations are commonly hand-labeled in their own `Notes` field as they're taken — "Room 1.", "Room 2.", "Room 6." is the real, confirmed convention on at least one live tour. Check each Reservation's Notes for a `Room N.` pattern at the start and pull the number if it's there. If a Reservation's Notes has no such marker, leave the room-number column blank — don't invent a sequence or assume booking order matches room order; a wrong invented number is worse than an honest blank.
-- `Food Restriction`, per guest, from the linked `Participants` record. Include this by default, not just internally — the hotels these lists go to typically provide breakfast (sometimes other meals), so dietary/allergy information is operationally relevant to the recipient, not just internal color. Leave the cell blank for a guest with nothing on file rather than writing "none" or otherwise implying it was confirmed absent.
-- Tour name and dates, for the spreadsheet header.
+**Per-guest passport data — Full Name, Passport Number, Date of Birth, Expiration Date — comes from the linked `Participants` records, one row per person, never from the Reservation:**
 
-**Also worth surfacing when populated, not just assumed absent:** each `Participants` record can carry `Room Request Tags` and `Room Request Notes` — a stated room preference (twin vs. double, ground floor, adjoining rooms, and so on). Pull these per participant and add them as a plain notes column when any exist for the tour; this is exactly the kind of detail a hotel or Tamara would want on the sheet, not internal-only color.
+A guest's passport name is often not what they go by day to day — the reference template shows "Debra Ann Renehan" traveling as "Debbie Renehan," "Kathleen Renehan Hutton" as "Kathleen Hutton." Pull `Participants.Passport Full Name` for the Full Name column (not First Name/Last Name — those are the casual name, already reflected in the room's Names column above). Pull `Participants.Passport Number` as text and keep it as text — real passport numbers mix letters and digits ("A83077918") or are long enough to look numeric ("660927094"); never let it get coerced to a number, which can silently corrupt or truncate it. Pull `Participants.Date of Birth` and `Participants.Passport Expiration` as dates.
+
+**Fallback when passport info hasn't come in yet:** if a participant has no `Passport Full Name` on file at the time the list is built, write a fallback marker in that person's Full Name cell instead of leaving it blank — on the English tab, "AT HOTEL"; on the hotel's-local-language tab (see below), the equivalent phrase in that language, confirmed for Portuguese as literally "no hotel" (Sabrina's own translation: "at the hotel," meaning passport details get confirmed on-site rather than pre-verified — this is a real, currently-used convention, present on 3 of 12 rooms in the reference template). Leave Passport Number/Date of Birth/Expiration Date blank alongside the marker rather than repeating it in every cell.
+
+**Food Restriction, per guest, from `Participants.Food Restriction`:** include on both tabs by default — the hotels these lists go to typically provide breakfast, so this is operationally relevant to the recipient, not just internal color. Leave blank for a guest with nothing on file.
+
+## Two tabs: English and the hotel's local language
+
+Every rooming list workbook has exactly two sheets: **English**, and a second sheet in **the hotel's own local language** — identical data and layout, translated headers and controlled values, but guest names, passport numbers, and dates are never translated.
+
+**Determining the hotel's language:** match the tour's property (the `Packages`/`Room Blocks` `Property Name` / `Property / Hotel` text) against a `Suppliers` record by name, and read that supplier's own `Language Preference` field — the same field `daily-supplier-communications` already relies on to decide what language to draft to a supplier in. Don't infer a language from the destination's country alone; a specific hotel's working language isn't guaranteed to match the country's dominant one, and `Language Preference` is the field this system already treats as authoritative for a supplier's correspondence. If no Suppliers record can be confidently matched to the property name, or a tour uses more than one property with different languages, escalate rather than guessing which language the second tab should be in.
+
+**Translating the second tab:** translate structural labels ("tour:"/"start date:"/"end date:", the column headers, "TOTAL") and controlled-vocabulary values (Bed Configuration, the passport-fallback marker) faithfully into the hotel's language. The Portuguese case is already confirmed exactly, from the reference template and Sabrina directly: Bed Configuration "Double Bed" → "cama casal," "Twin Beds" → "2 camas"; the passport-fallback marker → "no hotel." For any other language this skill hasn't been confirmed against yet, translate carefully but call out the specific phrases used when reporting back, so someone fluent can correct the exact hotel-facing wording once rather than trusting a first attempt silently. Never translate a guest's own name, passport number, or dates on either tab.
 
 ## Building the spreadsheet
 
-Once the data is gathered, use the xlsx skill to build the actual file — read its SKILL.md before creating the spreadsheet rather than hand-rolling formatting. One row per booked room, grouped or sortable by property, with a header block naming the tour and dates. Include the room number column even when it's blank for some or all rows — a partially-filled column is still useful, and its absence would look like the data was never checked. Keep it plain and functional: this is a working document Tamara sends externally or uses to sanity-check against a hotel's own list, not a branded guest-facing piece.
+Use the xlsx skill (read its SKILL.md first) to build both tabs. Match the reference template's block structure: for a room with more than one guest, merge the room number / names / headcount / bed-configuration cells vertically across that room's rows (one value per field per room, not repeated per person), and give each guest their own row for the passport columns underneath. A solo room is a single row. Header block at the top (tour name, start date, end date), then the column headers, then one room-block per Reservation in order, then a blank spacer row and a TOTAL row summing headcount across every room. Match the reference template's column proportions (room/headcount/bed-configuration narrow, names and passport columns wider) rather than inventing new formatting. Bold the passport-fallback marker so it's easy to spot at a glance before the list goes out.
 
-Deliver the finished spreadsheet the normal way (send the file, don't just describe it in chat).
+Deliver the finished two-tab workbook the normal way (send the file, don't just describe it in chat).
 
 ## What this skill does not do
 
@@ -48,4 +59,4 @@ If a request wants something beyond a rooms-and-guests list — room assignment 
 
 ## Escalate rather than guess
 
-If a tour has bookings with no clear room/property link, a Reservation missing a linked Participant, or Occupancy Type / Bed Configuration data that looks inconsistent with the guest count, flag it to Tamara rather than guessing — a wrong rooming list sent to a hotel is worse than a short delay while it's confirmed. Also flag: a Reservation's Notes containing a room marker that doesn't cleanly parse as `Room N.` (e.g. it names two rooms, or reads ambiguously) rather than guessing which one it means; and a Reservation still showing an unconfirmed Payment Status this close to the tour's start, since that's outside the normal pattern and worth Tamara's own check rather than either including or silently dropping it.
+If a tour has bookings with no clear room/property link, a Reservation missing a linked Participant, or Bed Configuration data that looks inconsistent with the guest count, flag it to Tamara rather than guessing — a wrong rooming list sent to a hotel is worse than a short delay while it's confirmed. Also flag: a Reservation's Notes containing a room marker that doesn't cleanly parse as `Room N.` rather than guessing which room it means; a Reservation still showing an unconfirmed Payment Status this close to the tour's start; no Suppliers record confidently matching the tour's property name (so the local-language tab's language can't be determined); a tour spanning more than one property with different `Language Preference` values; and, for a destination language this skill hasn't handled before, translated phrasing that hasn't been confirmed by a fluent speaker — surface the exact wording used rather than assuming a first machine translation is right for hotel-facing terminology.

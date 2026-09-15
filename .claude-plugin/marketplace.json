@@ -29,7 +29,7 @@
     {
       "name": "tinto-rooming-lists",
       "source": "./plugins/tinto-rooming-lists",
-      "description": "Producing a per-tour rooming list for a hotel or internal use, with guest names from linked Participants and room numbers parsed from Notes — a standalone plugin, open to the whole team."
+      "description": "Producing a per-tour rooming list with passport details, as a two-tab workbook (English + the hotel's local language), matching Tinto's real rooming-list format — a standalone plugin, open to the whole team."
     },
     {
       "name": "tinto-bus-company-itineraries",
