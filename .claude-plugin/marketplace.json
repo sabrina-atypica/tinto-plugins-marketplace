@@ -1,6 +1,6 @@
 {
   "name": "tinto-travels-plugins",
-  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts — guest communication, supplier logistics, booking-page publishing, winery-record entry, and client itinerary PDF plugins, each installable independently by whoever needs it.",
+  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts. Two plugins are restricted to one person's daily workflow (guest communication for Nélia, supplier logistics for Tamara); every other plugin — supplier-pairing audits, hotel-block booking, rooming lists, transport itineraries, booking-page publishing, winery-record entry, client itinerary PDFs — is open to the whole team.",
   "owner": {
     "name": "Sabrina Boesch",
     "email": "sabrina.boesch@gmail.com"
@@ -9,12 +9,32 @@
     {
       "name": "tinto-guest-communication",
       "source": "./plugins/tinto-guest-communication",
-      "description": "Nélia's guide to daily guest and winery-client email communications."
+      "description": "Nélia's guide to daily guest and winery-client email communications. Restricted to Nélia's daily workflow."
     },
     {
       "name": "tinto-logistics",
       "source": "./plugins/tinto-logistics",
-      "description": "Tamara's guide to supplier communications, rooming lists, and transport-company itineraries."
+      "description": "Tamara's guide to the daily supplier-booking check and drafting cycle. Restricted to Tamara's daily workflow."
+    },
+    {
+      "name": "tinto-confirm-supplier-pairings",
+      "source": "./plugins/tinto-confirm-supplier-pairings",
+      "description": "Auditing region-matched tour-supplier pairings against real itinerary evidence, destination by destination — a standalone plugin, open to the whole team."
+    },
+    {
+      "name": "tinto-batch-book-hotel-rooms",
+      "source": "./plugins/tinto-batch-book-hotel-rooms",
+      "description": "Requesting seasonal hotel room holds and converting them into sold-tour bookings — a standalone plugin, open to the whole team."
+    },
+    {
+      "name": "tinto-rooming-lists",
+      "source": "./plugins/tinto-rooming-lists",
+      "description": "Producing a per-tour rooming list for a hotel or internal use — a standalone plugin, open to the whole team."
+    },
+    {
+      "name": "tinto-bus-company-itineraries",
+      "source": "./plugins/tinto-bus-company-itineraries",
+      "description": "Producing a branded day-by-day transport schedule PDF for a tour's bus/driver company — a standalone plugin, open to the whole team."
     },
     {
       "name": "tinto-booking-pages",

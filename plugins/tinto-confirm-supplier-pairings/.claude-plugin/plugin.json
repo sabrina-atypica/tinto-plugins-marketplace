@@ -1,0 +1,8 @@
+{
+  "name": "tinto-confirm-supplier-pairings",
+  "version": "0.1.0",
+  "description": "Auditing region-matched tour-supplier pairings against real itinerary evidence, destination by destination, so daily-supplier-communications can draft safely. A standalone plugin, open to whoever runs the audit (typically Tamara), separate from the restricted tinto-logistics daily-cycle plugin.",
+  "author": {
+    "name": "Tinto Travels"
+  }
+}

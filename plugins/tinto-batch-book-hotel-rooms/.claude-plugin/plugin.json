@@ -1,0 +1,8 @@
+{
+  "name": "tinto-batch-book-hotel-rooms",
+  "version": "0.1.0",
+  "description": "Requesting a new seasonal hotel room hold, or converting a held block into a sold tour's actual booking, writing to the production base's Hotel Room Inventory and Supplier Booking Lead Times tables. A standalone plugin, open to whoever manages hotel blocks (typically Tamara or Nélia), separate from the restricted tinto-logistics daily-cycle plugin.",
+  "author": {
+    "name": "Tinto Travels"
+  }
+}

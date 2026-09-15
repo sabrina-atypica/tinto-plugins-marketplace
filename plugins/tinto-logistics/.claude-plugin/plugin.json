@@ -1,7 +1,7 @@
 {
   "name": "tinto-logistics",
-  "version": "0.4.0",
-  "description": "Tamara's guide to Tinto Travels' automated supplier communications — confirming which suppliers actually belong to which tour, checking what's due each day, drafting supplier emails correctly (English-first, thread-aware), reviewing/sending, and batch-booking hotel rooms. Also bundles rooming-lists and bus-company-itineraries, still their original placeholder design pending a separate rebuild.",
+  "version": "0.7.0",
+  "description": "Tamara's guide to Tinto Travels' automated daily supplier-booking cycle — checking Airtable for what's due each day, drafting supplier emails correctly (English-first, thread-aware), reviewing/sending, and the twice-yearly Season Reconfirmation sweep. Restricted to Tamara's daily workflow, same as tinto-guest-communication is to Nélia's; confirming supplier pairings, batch-booking hotel rooms, rooming lists, and bus-company itineraries are now separate, team-installable plugins.",
   "author": {
     "name": "Tinto Travels"
   }

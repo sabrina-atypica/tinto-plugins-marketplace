@@ -8,8 +8,8 @@ description: >
   [supplier]," "flag a lead time that looks wrong," or when
   `daily-supplier-communications` reports rows blocked on pairing
   confirmation. It should also be run once, destination by destination, as
-  the very first thing Tamara does after this plugin is installed — before
-  the first real daily run, not after.
+  the very first thing Tamara does — before the `tinto-logistics` plugin's
+  daily scheduler runs for the first time, not after.
 metadata:
   version: "0.2.0"
 ---
@@ -54,7 +54,7 @@ For each pairing that came out of Phase 1 Confirmed or Corrected:
 
 1. **Search Gmail** (`search_threads`, `to:<supplier email> OR from:<supplier email>`, loosely combined with the tour name or a date in its range — keep it loose enough to catch a thread under a slightly different subject) for any existing correspondence with this supplier. Same technique `daily-supplier-communications` uses for thread-matching before drafting.
 2. **If nothing turns up**, say so plainly and leave `Booking Request Status` as it is — this is a genuinely fresh pairing as far as this system can tell.
-3. **If something turns up**, don't silently trust that it's about this tour — subject-line/snippet matching is a heuristic, not proof, same caution as thread-matching everywhere else in this plugin. Pull the thread (`get_thread`, `PLAIN_TEXT`) and surface it to Tamara plainly: name the supplier, the date of the earliest relevant message, and a short read of what it looks like ("looks like a first-contact email went out 2026-08-02, no reply yet" / "there's a full back-and-forth that reads like this is already confirmed"). Ask her what it actually means for this specific tour — already contacted, already confirmed, or unrelated to this booking.
+3. **If something turns up**, don't silently trust that it's about this tour — subject-line/snippet matching is a heuristic, not proof, same caution `daily-supplier-communications` applies to its own thread-matching. Pull the thread (`get_thread`, `PLAIN_TEXT`) and surface it to Tamara plainly: name the supplier, the date of the earliest relevant message, and a short read of what it looks like ("looks like a first-contact email went out 2026-08-02, no reply yet" / "there's a full back-and-forth that reads like this is already confirmed"). Ask her what it actually means for this specific tour — already contacted, already confirmed, or unrelated to this booking.
 4. **Apply her answer** to every `Supplier Booking Lead Times` row in this pairing: if she confirms it's real correspondence for this tour, update `Booking Request Status` to match (typically "Sent," or "Drafted" if it was drafted but evidently never sent) and append `[STATUS BACKFILLED BY TAMARA <today's date>, from existing Gmail thread dated <date>]` to Notes — distinct from the pairing markers in Phase 1, so it's clear this reflects real-world status, not just a confirmed identity. If she says the thread is unrelated, leave the row alone and say so.
 5. **Ask once per destination batch, not once per pairing**, whether anything outside Gmail should feed into this too — a spreadsheet, a WhatsApp log, notes Peter or Nina kept — since Gmail only shows what happened to go through that channel. If she has something, treat what she tells you the same way as a confirmed Gmail finding: update status, note the source plainly in Notes rather than implying it came from Gmail when it didn't.
 

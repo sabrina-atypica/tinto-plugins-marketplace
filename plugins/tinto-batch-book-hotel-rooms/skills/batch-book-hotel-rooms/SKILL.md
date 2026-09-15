@@ -36,7 +36,7 @@ Confirm back to Tamara exactly what was updated/created in both tables — this 
 
 ## What's hers to change, and what isn't
 
-Requesting holds and converting sold blocks are ordinary day-to-day operation — Tamara's own territory, no permission check needed. She should not change the cancellation-buffer policy (the 7-day buffer, or which lead-time rule applies to which touchpoint) — that's a system-wide rule and stays with Peter/Nina, same boundary as everywhere else in this plugin.
+Requesting holds and converting sold blocks are ordinary day-to-day operation — Tamara's own territory, no permission check needed. She should not change the cancellation-buffer policy (the 7-day buffer, or which lead-time rule applies to which touchpoint) — that's a system-wide rule and stays with Peter/Nina, same boundary as `daily-supplier-communications` and every other Tamara-facing skill in this marketplace.
 
 ## Escalate, don't fix, when you see:
 

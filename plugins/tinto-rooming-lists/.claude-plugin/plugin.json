@@ -1,0 +1,8 @@
+{
+  "name": "tinto-rooming-lists",
+  "version": "0.1.0",
+  "description": "Producing a per-tour rooming list — which guests are booked into which room, at which property — as a spreadsheet to send to a hotel or use internally. A standalone plugin, open to anyone on the team who needs it. Still its original placeholder design, not yet rebuilt against real production data.",
+  "author": {
+    "name": "Tinto Travels"
+  }
+}
