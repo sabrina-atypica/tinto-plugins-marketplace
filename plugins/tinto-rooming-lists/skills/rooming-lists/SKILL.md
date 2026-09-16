@@ -7,7 +7,7 @@ description: >
   of which guests occupy which rooms, with passport details, to send to a
   hotel or use internally.
 metadata:
-  version: "0.5.0"
+  version: "0.5.1"
 ---
 
 # Rooming Lists
@@ -32,6 +32,8 @@ Produce a per-tour rooming list — which guests are booked into which room, at 
 A guest's passport name is often not what they go by day to day — the reference template shows "Debra Ann Renehan" traveling as "Debbie Renehan," "Kathleen Renehan Hutton" as "Kathleen Hutton." Pull `Participants.Passport Full Name` for the Full Name column (not First Name/Last Name — those are the casual name, already reflected in the room's Names column above). Pull `Participants.Passport Number` as text and keep it as text — real passport numbers mix letters and digits ("A83077918") or are long enough to look numeric ("660927094"); never let it get coerced to a number, which can silently corrupt or truncate it. Pull `Participants.Date of Birth` and `Participants.Passport Expiration` as dates.
 
 **Fallback when passport info hasn't come in yet:** if a participant has no `Passport Full Name` on file at the time the list is built, write a fallback marker in that person's Full Name cell instead of leaving it blank, meaning "not pre-verified — confirm at the hotel." **This marker is always translated to match its own tab, never copied verbatim between tabs:** on the English tab it reads "AT HOTEL"; on the hotel's-local-language tab it's the equivalent phrase in that specific language. "NO HOTEL" — the literal text seen in the real reference template and present on 3 of 12 rooms there — is Portuguese for "at the hotel" (Sabrina's own translation) and belongs only on a Portuguese-language tab; it is not a fixed universal marker and must never appear as-is on the English tab or on a tab in any other language. Leave Passport Number/Date of Birth/Expiration Date blank alongside the marker rather than repeating it in every cell.
+
+**Always prefix the marker with the guest's own name, so a shared room with more than one guest still missing passport data doesn't read as two identical, unattributable rows.** A live test against a real multi-guest room (both roommates still missing passport data) surfaced this: with a bare marker, two rows in the same room both just say "AT HOTEL," and nothing on the row itself says which guest is which. Fix: pull the guest's ordinary name from `Participants.First Name`/`Last Name` (this is reliably on file well before passport data is, since it's set when the participant record is first created) and write it into the Full Name cell ahead of the marker, in parentheses — "Jennifer Howse (AT HOTEL)," "Kathy Muenz (NO HOTEL)" on a Portuguese tab. Once real passport data comes in for that guest, their row reverts to the plain `Passport Full Name` value with no marker at all, exactly as before — this prefix only applies to the fallback case.
 
 **Food Restriction, per guest, from `Participants.Food Restriction`:** include on both tabs by default — the hotels these lists go to typically provide breakfast, so this is operationally relevant to the recipient, not just internal color. Leave blank for a guest with nothing on file.
 
