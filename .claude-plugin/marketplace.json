@@ -34,7 +34,7 @@
     {
       "name": "tinto-bus-company-itineraries",
       "source": "./plugins/tinto-bus-company-itineraries",
-      "description": "Producing a branded day-by-day transport schedule PDF for a tour's bus/driver company — a standalone plugin, open to the whole team."
+      "description": "Producing the plain, day-by-day pickup/dropoff schedule a tour's transport supplier actually works from — a standalone plugin, open to the whole team."
     },
     {
       "name": "tinto-booking-pages",
