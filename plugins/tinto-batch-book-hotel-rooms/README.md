@@ -8,7 +8,7 @@ Hotels are the one supplier category that doesn't follow the rolling, per-tour f
 
 **Split 2026-09-15:** this used to be bundled inside `tinto-logistics`. It's now its own standalone plugin, installable by anyone on the team who manages hotel blocks (typically Tamara, sometimes Nélia) — not gated behind Tamara's restricted daily-cycle plugin.
 
-**Reviewed and rebuilt against live production schema and data, 2026-09-16** (see below).
+**Reviewed and rebuilt against live production schema and data, 2026-09-16** (see below). **Updated 2026-09-16 (v0.3.0):** both halves now write a human-readable `Notes` narrative on the `Hotel Room Inventory` row (append-don't-overwrite, matching the base's `[DRAFTED ...]`/`[SENT ...]` marker convention), and the scope boundary below now says explicitly that this skill never touches `Supplier Payments`.
 
 ## Components
 
@@ -32,4 +32,4 @@ Ask Claude things like:
 
 ## Not in this plugin
 
-The daily supplier-check-and-draft cycle itself — Tamara's restricted `tinto-logistics` plugin. Confirming supplier pairings — `tinto-confirm-supplier-pairings`. Rooming lists — `tinto-rooming-lists`. Bus company itineraries — `tinto-bus-company-itineraries`. Guest and winery communications — `tinto-guest-communication`. Booking-page publishing — `tinto-booking-pages`. Changing the cancellation-buffer policy or which lead-time rule applies to which touchpoint stays Peter/Nina's — this skill never edits those.
+The daily supplier-check-and-draft cycle itself — Tamara's restricted `tinto-logistics` plugin. Confirming supplier pairings — `tinto-confirm-supplier-pairings`. Rooming lists — `tinto-rooming-lists`. Bus company itineraries — `tinto-bus-company-itineraries`. Guest and winery communications — `tinto-guest-communication`. Booking-page publishing — `tinto-booking-pages`. Changing the cancellation-buffer policy or which lead-time rule applies to which touchpoint stays Peter/Nina's — this skill never edits those. Logging a hotel's payment obligation in `Supplier Payments` — that table is Finance's (Peter/Nina) territory and is never written by this skill, even once a block converts to Sold; see `finance-reference.md`'s money rule.
