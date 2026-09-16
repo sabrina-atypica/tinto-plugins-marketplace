@@ -7,7 +7,7 @@ description: >
   of which guests occupy which rooms, with passport details, to send to a
   hotel or use internally.
 metadata:
-  version: "0.5.1"
+  version: "0.5.2"
 ---
 
 # Rooming Lists
@@ -16,9 +16,15 @@ Produce a per-tour rooming list — which guests are booked into which room, at 
 
 **Layout and conventions below are confirmed against a real Tinto rooming list** (`Rooming List_Linganore_08June.xlsx`, supplied 2026-09-15), not invented — match its structure rather than building a generic guests-and-rooms table.
 
+## Confirm which Tour record first — never assume, even on a repeat request
+
+**A tour name is not unique.** The same tour name can have several real, separately-booked departures on record — confirmed live: "Tinto Presents the Joys of Southern Italy — Puglia" alone has three (Aug 29–Sep 5 2027, Sep 12–19 2027, Sep 26–Oct 3 2027), each with its own distinct set of Reservations. Look the name up in `Tours` before doing anything else, and if more than one record matches, **ask which departure is meant — always, with no exception** — surfacing each match's date range (and Reservation count, if it's a fast way to tell them apart) rather than guessing from ordering, recency, or which one has more bookings.
+
+**This still applies on a repeat request in the same conversation, even for a tour just discussed.** Don't reuse a Tour record identified earlier in the conversation without re-confirming it's the one meant this time — a later message asking for "the Puglia tour" again is a fresh request, not obviously a reference to the same specific departure as before. Silently carrying forward an earlier disambiguation is exactly the kind of assumption this skill exists to avoid; ask again rather than assume continuity.
+
 ## Where the data comes from
 
-**Primary source of truth: the production Airtable base.** For the requested tour, filter `Reservations` directly by its `Tour` link field — every Reservation links straight to its Tour. Each linked Reservation represents **one room actually booked, not one traveler** — a Double-occupancy reservation is still one room, with two guests in it, not two rows.
+**Primary source of truth: the production Airtable base.** Once the specific Tour record is confirmed, filter `Reservations` directly by its `Tour` link field — every Reservation links straight to its Tour. Each linked Reservation represents **one room actually booked, not one traveler** — a Double-occupancy reservation is still one room, with two guests in it, not two rows.
 
 **Room-summary data — room number, names, headcount, bed configuration — comes from the Reservation and its linked Package:**
 
