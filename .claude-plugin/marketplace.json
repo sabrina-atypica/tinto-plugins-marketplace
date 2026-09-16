@@ -44,7 +44,7 @@
     {
       "name": "tinto-add-winery-record",
       "source": "./plugins/tinto-add-winery-record",
-      "description": "Entering an already-agreed winery client's record and branding into Airtable — a standalone plugin, installable on its own by anyone who needs it (e.g. Peter)."
+      "description": "Entering an already-agreed client or affiliation's record and branding (logo, brand accent color) into Airtable, sourced by web search rather than a chat upload, for anyone who needs it (e.g. Peter)."
     },
     {
       "name": "tinto-client-itinerary-pdf",
