@@ -1,7 +1,7 @@
 {
   "name": "tinto-bus-company-itineraries",
-  "version": "0.2.0",
-  "description": "Producing the plain, day-by-day pickup/dropoff schedule a tour's transport supplier actually works from. A standalone plugin, open to anyone on the team who needs it. Rebuilt 2026-09-16 against a real reference document and new Airtable fields; no longer the original placeholder design.",
+  "version": "0.3.0",
+  "description": "Producing the plain, day-by-day pickup/dropoff schedule a tour's transport supplier actually works from. A standalone plugin, open to anyone on the team who needs it. Rebuilt 2026-09-16 against a real reference document and new Airtable fields, then extended 2026-09-17 to cover five destination-specific formats (language and layout vary by destination); no longer the original placeholder design.",
   "author": {
     "name": "Tinto Travels"
   }

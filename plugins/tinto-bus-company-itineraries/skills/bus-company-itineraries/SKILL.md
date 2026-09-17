@@ -7,12 +7,12 @@ description: >
   pickup/dropoff document a tour's Transport supplier (a bus or driver
   company) actually works from.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Bus Company Itineraries
 
-Produce the day-by-day driver schedule Tamara sends straight to a tour's Transport supplier. This is a **plain internal working document**, not guest-facing marketing copy and not one of Tinto's branded PDFs — see "Format and layout" below for why, and match the reference example exactly rather than dressing it up.
+Produce the day-by-day driver schedule Tamara sends straight to a tour's Transport supplier. This is a **plain internal working document**, not guest-facing marketing copy and not one of Tinto's branded PDFs — see "Format and layout" below for why. **The format is not one universal template — it varies by destination** (language, header shape, level of detail). Always look up the tour's own destination convention in `references/destination-formats.md` before composing anything; don't default to whichever destination you've seen most recently.
 
 ## Rebuilt 2026-09-16
 
@@ -24,6 +24,12 @@ The original version of this skill assumed `Bookings (Confirmations)` rows tagge
 - It has a header with two named on-the-ground contacts and phone numbers (e.g. "Andreia: 961 792 740", "Nina: 91 639 1989") that don't match any Suppliers record — checked against the actual Transport supplier on file for Alentejo (RSI, contact André Lopes) and it's a different person. These are Tinto's own people for that tour run, not a supplier's.
 
 Four fields were added to `Bookings (Confirmations)` and one to `Tours` to close these gaps (see "Where the data comes from"). **Historic tours won't have this data populated yet** — this is new schema, not backfilled — so expect to escalate to Tamara for older/sparse tours until she's had a chance to fill it in going forward.
+
+## Extended 2026-09-17 — the format varies by destination
+
+Tamara separately provided five more real examples, one each for Alentejo, Loire Valley, Northern Adriatic & Slovenia, Southern Tuscany & Umbria, and Castille & León. Comparing them showed the Alentejo/Portuguese layout above is just one of several real conventions, not a universal template: Loire is French with drive distances between stops, Slovenia is English with a formal title-block header and bullets, Tuscany is English with a plainer dash-separated layout and no pax count, and Castille & León is Spanish with numbered stops. `references/destination-formats.md` captures all five conventions in detail — read the section matching the tour's `Location` before composing (see "Which destination convention to use").
+
+None of those five source documents correspond to a tour currently in production Airtable (all are 2026-dated; every tour in the base as of 2026-09-17 is 2027-dated) — they're format references only, not data to reprint for a real request.
 
 ## Where the data comes from
 
@@ -46,38 +52,28 @@ If a day in the tour's date range has no rows at all, that's a gap — ask Tamar
 
 `Standard Itineraries` can still be checked as a rough baseline if a tour looks unusually sparse, but every row there is unconfirmed by design (`Confidence` field) and several destinations were reconstructed rather than pulled from real bookings — treat it as a hint about what's plausible, never as data to print on a driver's schedule.
 
+## Which destination convention to use
+
+Before composing anything, get the tour's `Location` from `Tours` and read the matching section of `references/destination-formats.md`. That file is the actual source of truth for language, header shape, day-header format, entry style (plain lines vs. bullets vs. numbered stops), whether drive distances are shown, and date/weekday formatting conventions for each destination seen so far (Alentejo, Loire Valley, Northern Adriatic & Slovenia, Southern Tuscany & Umbria, Castille & León). Don't reuse another destination's conventions by analogy, and don't invent one — if the tour's `Location` has no section there yet, ask Tamara for a real example first, the same way the existing five got built.
+
 ## Composing each line
 
-The source data is structured (Activity Description, Supplier, Location / Address Note, Logistics Note); the output line is a short, natural sentence in the plain operational style of the reference document — not a mechanical concatenation of the fields with labels. Match its conventions:
+The source data is structured (Activity Description, Supplier, Location / Address Note, Logistics Note); the output line is a short, natural sentence in the plain operational style of that destination's own convention — not a mechanical concatenation of the fields with labels, and not a translation of another destination's phrasing into a different language. General principles that hold across every destination:
 
-- Lead with the time, then the action: "saída para X", "saída do hotel para X", "pick-up em X", "voltar para o hotel".
-- Fold luggage handling in naturally and keep it shouting-case where the reference does: "(24 pessoas + MALAS)", "COM MALAS".
-- A wait or stop gets "parando por N minutos em X" or "fazer uma paragem para WC no caminho, perto de X".
+- Lead with the time, then the action, in whatever phrasing convention that destination's reference uses (e.g. Alentejo's "saída para X" / "voltar para o hotel"; Slovenia's "Departure for X").
+- Fold luggage handling in naturally, in the destination's own shorthand (Alentejo: "+ MALAS", "COM MALAS"; Castille & León: "COM TODA SU EQUIPAJE"; Loire/Slovenia: "with luggage" / "+ bagages" phrased in prose).
+- A wait or comfort stop gets a short clause in the same style as the rest of that destination's document (e.g. Alentejo's "parando por 40 minutos em X" / "fazer uma paragem para WC").
 - When a Supplier and a separate Location / Address Note both describe the same stop, don't repeat the place name twice — pick whichever reads more naturally as the destination.
-- When two rows share the same exact `Time` (e.g. a drop-off immediately followed by a luggage drop at a different location), render them as consecutive lines without repeating the time, exactly as the reference does for 12:15 on Day 1 ("Deixar os clientes primeiro perto do Jardim público" / "Depois, deixar as malas no MAR DE AR AQUEDUTO").
-- Write the whole document in European Portuguese, matching the reference exactly — this is an operational document for Tinto's own on-the-ground team and a Portugal-based transport supplier, distinct from the English guest-facing materials this marketplace otherwise produces (and distinct from Sabrina's own English-language preference for what Claude says to her — that governs conversation and other deliverables, not this document's actual content, which has always been in Portuguese).
+- When two rows share the same exact `Time`, render them as consecutive lines without repeating the time (see the Alentejo 12:15 example in the reference file).
+- Match the destination's own language exactly (Portuguese for Alentejo, French for Loire Valley, English for Slovenia and Tuscany, Spanish for Castille & León) — this is an operational document for Tinto's own on-the-ground team and a local transport supplier, distinct from the English guest-facing materials this marketplace otherwise produces (and distinct from Sabrina's own English-language preference for what Claude says to her — that governs conversation and other deliverables, not a destination document's actual content, which follows the local convention).
+- Cross-check any pax count that appears inside a note against `Tours.Guests Booked` rather than trusting the note in isolation — see the general rule at the top of `destination-formats.md` about the Alentejo header/body mismatch.
 
 ## Format and layout
 
-Reproduce the reference document's layout exactly — this is a plain internal working document, not one of Tinto's branded guest-facing PDFs, so **do not** apply `tinto-brand.md`'s palette, typefaces, or logo here. No color, no logo, no decorative elements.
+Reproduce that destination's own header shape, day-header format, and entry style exactly, per `references/destination-formats.md` — this is a plain internal working document, not one of Tinto's branded guest-facing PDFs, so **do not** apply `tinto-brand.md`'s palette, typefaces, or logo here for any destination. No color, no logo, no decorative elements, regardless of language.
 
-```
-Tinto Travels   [N] pessoas                    [Contact 1 name]:   [phone]
-Itinerário – [start day] a [end day] de [Month], [year]      [Contact 2 name]:   [phone]
-
-Dia [n]: [DD] de [Month] ([dia da semana])
-[HH:MM]  [line 1 for this time]
-         [line 2, if another row shares this time — no time repeated]
-[HH:MM]  [next entry]
-
-Dia [n+1]: ...
-```
-
-- "Tinto Travels" bold; the pax count underlined next to it.
-- Each "Dia N: ..." day header underlined.
-- Day-of-week and month names in European Portuguese, month capitalized (Junho, not junho), day-of-week lowercase (segunda-feira, terça-feira, quarta-feira, quinta-feira, sexta-feira, sábado, domingo).
-- Build the actual file with the pdf skill (read its SKILL.md before generating) — the formatting here is plain text layout (bold, underline, simple two-column header), not a styled document, so keep the pdf skill's own defaults minimal rather than reaching for a template.
+Build the actual file with the pdf skill (read its SKILL.md before generating) — the formatting here is plain text layout (bold/underline/bullets as that destination's convention calls for, a simple header block), not a styled document, so keep the pdf skill's own defaults minimal rather than reaching for a template.
 
 ## Escalate rather than guess
 
-If a day is missing entries entirely, a time is missing where one is clearly needed, the tour's `On-Tour Contacts` is blank, or a row's `Notes` still marks it as an unconfirmed guess, say so plainly and ask Tamara rather than inventing a plausible-looking schedule — a driver working from a wrong or incomplete schedule is a real operational failure, not just an inconvenience.
+If a day is missing entries entirely, a time is missing where one is clearly needed, the tour's `On-Tour Contacts` is blank, a row's `Notes` still marks it as an unconfirmed guess, or the tour's `Location` has no convention on file in `destination-formats.md` yet, say so plainly and ask Tamara rather than inventing a plausible-looking schedule or format — a driver working from a wrong or incomplete schedule is a real operational failure, not just an inconvenience.

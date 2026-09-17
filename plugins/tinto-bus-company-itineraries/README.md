@@ -10,11 +10,13 @@ An operational document (times, places, pax counts, luggage handling, plain logi
 
 **Rebuilt 2026-09-16** against a real reference document Sabrina provided (`BUS_2026_06_08_Linganore_alentejo.pdf`). The original placeholder assumed a branded PDF built from Supplier.Type = Transport rows alone; the real document is plain, unbranded text covering the whole day, with exact clock times and two on-the-ground contact names/numbers that don't come from Suppliers at all. Four fields were added to `Bookings (Confirmations)` (`Time`, `Stop Type`, `Location / Address Note`, `Logistics Note`) and one to `Tours` (`On-Tour Contacts`) to support this — see the skill's own "Rebuilt 2026-09-16" section for the full reasoning. **Historic tours won't have this data populated yet**; expect to escalate to Tamara for older tours until the new fields are filled in going forward.
 
+**Extended 2026-09-17:** five more real examples from Tamara (Alentejo, Loire Valley, Northern Adriatic & Slovenia, Southern Tuscany & Umbria, Castille & León) showed the format isn't one universal template — language, header shape, and level of detail all vary by destination. `skills/bus-company-itineraries/references/destination-formats.md` now documents each destination's own convention; the skill looks up the tour's `Location` and follows that destination's format rather than defaulting to Alentejo's. None of those five examples correspond to a tour currently in production Airtable (all 2026-dated; production only has 2027 tours) — they're format references only.
+
 ## Components
 
 | Skill | Purpose |
 |---|---|
-| `bus-company-itineraries` | Pulls every `Bookings (Confirmations)` row for a tour in day/time order, plus confirmed headcount and on-tour contacts from `Tours`, and composes the plain-text day-by-day driver schedule in European Portuguese, matching the reference document's exact layout and phrasing conventions. |
+| `bus-company-itineraries` | Pulls every `Bookings (Confirmations)` row for a tour in day/time order, plus confirmed headcount and on-tour contacts from `Tours`, and composes the plain-text day-by-day driver schedule in that destination's own language and layout convention (see `references/destination-formats.md`). |
 
 No agents or hooks.
 
