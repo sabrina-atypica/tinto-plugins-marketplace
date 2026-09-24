@@ -21,14 +21,13 @@ session does it, so it never depends on any one session's memory.
 | `tinto-confirm-supplier-pairings` | 0.1.0 | Done and verified, carried over unchanged from Tamara's rebuilt logistics work. |
 | `tinto-batch-book-hotel-rooms` | 0.2.0 | Design rebuilt against live production schema, not yet confirmed end to end. In progress on a branch (`batch-book-hotel-rooms-notes-and-scope`), adding Notes narrative writes and scoping out Supplier Payments, heading to 0.3.0. |
 | `tinto-rooming-lists` | 0.6.0 | Design rebuilt and manually tested against two real tours (Alentejo, Puglia). Not yet confirmed end to end with Tamara or a live hotel send. |
-| `tinto-bus-company-itineraries` | 0.1.0 | Original placeholder on master. In progress on a branch (`bus-company-itineraries-airtable-rebuild`), rebuilding it against a real reference document and making it destination aware. Not yet merged. |
+| `tinto-bus-company-itineraries` | 0.6.0 | Done and verified. Rebuilt against a real reference document and new Airtable fields, extended to five destination formats, and tested end to end with a full simulated data population and PDF output against a real 2027 tour. Includes a 2026-09-24 onboarding check-in for Tamara (which destinations have templates, which real running tours still need one). `claude plugin validate` passed. Merged to master 2026-09-24. |
 | `tinto-booking-pages` | 0.1.0 | Design rebuilt around the real `/api/publish-tour` endpoint, not yet watched succeed end to end on a real write. |
 | `tinto-add-winery-record` | 0.3.0 | Done and verified live (real client record, Vinia Wine and Kitchen). Updated 2026-09-24 to match the booking-page team's contract for this table (logo/color validation criteria, explicit wine-club discount interview step). `claude plugin validate` passed. Ready for handover, merged to master. |
 | `tinto-client-itinerary-pdf` | 0.1.0 | Done and verified twice against real data (field by field, and a live simulated request). |
 
 **Open branches not yet in this table's "master" versions above:**
 - `batch-book-hotel-rooms-notes-and-scope`
-- `bus-company-itineraries-airtable-rebuild`
 
 Check `git branch -a` in the repo for the current list, since this section can go stale faster than the
 table above.
