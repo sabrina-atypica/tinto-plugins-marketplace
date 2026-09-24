@@ -4,7 +4,7 @@ The plain day-by-day driver schedule this skill produces is **not one universal 
 
 None of these five source documents correspond to a tour currently in production Airtable — all five are dated 2026, and every tour in the production base as of 2026-09-17 is dated 2027. They're kept here purely as format/convention references, not as data tied to a specific `Tours` record. If you're ever asked to produce a schedule for one of these same trips for real, treat it as a fresh pull from Airtable, not a reprint of the source `.docx`.
 
-**General rule across every destination:** these are real working drafts from Tamara, not polished output — some have inconsistent time formatting, a missing pax count, or (Slovenia, below) a date that doesn't agree with its own filename. Flag an inconsistency like that to Tamara rather than silently "fixing" it your own way, and rather than treating everything in a draft as necessarily correct just because it's the reference. In particular, always prefer `Tours.Guests Booked` for the pax count over any number that appears in a supplier-facing note — the Philip Carter Alentejo example has a header that says "14 pessoas" and a first-line note that says "25 pessoas + MALAS." Those two numbers disagreeing is exactly the kind of thing to flag, not average out or guess between.
+**General rule across every destination:** these are real working drafts from Tamara, not polished output — some have inconsistent time formatting or a missing pax count. Flag a genuine content inconsistency like that to Tamara rather than silently "fixing" it your own way, and rather than treating everything in a draft as necessarily correct just because it's the reference. (One thing that looked like an inconsistency isn't: the Slovenia source's filename and body text disagree on the year, but since these documents are format templates only — never data for a specific tour — that particular mismatch doesn't matter and isn't worth raising again.) In particular, always prefer `Tours.Guests Booked` for the pax count over any number that appears in a supplier-facing note — the Philip Carter Alentejo example has a header that says "14 pessoas" and a first-line note that says "25 pessoas + MALAS." Those two numbers disagreeing is exactly the kind of thing to flag, not average out or guess between.
 
 ## Alentejo — European Portuguese
 
@@ -28,7 +28,7 @@ Source: `BUS 2026 07 06 Tinto Loire.docx`.
 
 ## Northern Adriatic & Slovenia — English
 
-Source: `BUS 2026 09 21 Tinto Slovenia .docx`. **Flag to Tamara before using this one as a real schedule** — its filename says 2026 but the document body says "Dates: Monday September 21 – Sunday September 27, 2027"; confirm which year is actually correct rather than assuming either.
+Source: `BUS 2026 09 21 Tinto Slovenia .docx`. (Its filename says 2026 and its body says 2027 — that mismatch is irrelevant here: this document is a pure format template, not data for a specific tour. Confirmed with Sabrina 2026-09-24; when a real Slovenia tour comes up, pull its actual dates fresh from Airtable and never reuse anything date-related from this source file.)
 
 - Header block: tour name as a caps title line; "Dates: [Weekday Month DD] – [Weekday Month DD], [year]"; "Contact: [Name] Tel.: [phone]"; "Nr. of passengers: [N] participants + [luggage note]".
 - Day header: "Day [n] – [Weekday]".
