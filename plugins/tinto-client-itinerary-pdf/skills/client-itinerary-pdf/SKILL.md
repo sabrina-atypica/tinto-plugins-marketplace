@@ -10,7 +10,7 @@ description: >
   client-supplied source itinerary PDFs (e.g. the "Fox Run Vineyards
   presents..." style document).
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # Client Itinerary PDF
@@ -32,18 +32,17 @@ Once you have a name, look it up against the `Client / Affiliation` table (searc
 - **Found an existing record** → note it and go to Step 3.
 - **No matching record** → this is a new client. Go to Step 2 before continuing.
 
-### Step 2 — New winery: find branding, then add the record
+### Step 2 — New winery: hand off to `tinto-add-winery-record`, don't redo its work here
 
-A tour can't be branded correctly without this, so it happens before any tour details are discussed.
+Sourcing a new client's logo and brand color and filing them to Airtable is `tinto-add-winery-record`'s whole job, already built, maintained, and verified there. This skill doesn't keep its own second copy of that research-and-write process. Instead:
 
-1. Web-search for the winery's own site and public brand presence — logo, primary brand color, location/region. Prefer their official site over third-party listings.
-2. **Show what you found and ask Peter/Nélia to confirm or correct it before writing anything.** Brand color and logo are visible on every page of the finished PDF and on the booking page — don't guess a hex code from a screenshot impression, and don't attach a logo you're not confident is their current one.
-3. Once confirmed, create the `Client / Affiliation` record: Client Name, Logo (download and attach the confirmed image), Brand Accent Color (hex), and Notes (mention it was sourced via web search and confirmed on this date, so anyone reading the record later knows it wasn't handed over directly by the client).
-4. This is the same record the `add-winery-record` skill maintains, and the same boundary applies: **commission rate, discount codes, and payment terms are not this skill's to set**, even though the write scope technically allows it. Leave those fields blank and flag to Peter that they still need to be filled in.
+1. Check whether `tinto-add-winery-record`'s `add-winery-record` skill is available in this session (it's a separate, independently-installable plugin in the same marketplace, not bundled with this one).
+2. **If it's available**, invoke it with the Skill tool, passing the confirmed client name and a note that this is for a new tour's itinerary PDF, so its branding is needed now rather than at Nélia's own pace. Wait for it to finish, then read back the `Client / Affiliation` record it created before moving to Step 3. Don't re-ask the questions that skill already asks (its own web-search-then-confirm flow for logo/color, its own commission/discount/payment-terms boundary) — that's its job, not this skill's.
+3. **If it isn't available in this session**, say so plainly: this plugin needs `tinto-add-winery-record` installed alongside it to handle a brand-new client, and ask Peter/Nélia to either install it or add the client's Airtable record themselves before continuing. Don't fall back to reimplementing the web-search-and-file steps here — a second, drifting copy of that logic is exactly what this hand-off is meant to avoid.
 
 ### Step 3 — Confirm the tour details, one at a time
 
-With the client identified, ask the following one at a time — ask, get an answer, then move to the next. Don't list all five in one message.
+With the client identified (found directly in Step 1, or just created via `tinto-add-winery-record` in Step 2), ask the following one at a time — ask, get an answer, then move to the next. Don't list all five in one message.
 
 1. **Date(s)** of the departure.
 2. **Location / destination.**
@@ -65,7 +64,7 @@ Tinto also has a separate `tinto-prepost-tour-guide` skill that builds a **desti
 
 Tinto sells tours white-labeled under the selling client's own brand (a winery, an alumni association, a wine shop — the `Client / Affiliation` table). **This document should carry that client's branding, the same way the booking pages do** — not Tinto's own burgundy/gold identity by default.
 
-1. Use the `Client / Affiliation` record confirmed in Step 1/2 above — its logo and brand accent color, not the plain-text `Client / Affiliation` field on `Tours` (only the linked record is reliable, per the same distinction the `booking-page-publishing` skill checks).
+1. Use the `Client / Affiliation` record confirmed in Step 1, or just created via `tinto-add-winery-record` in Step 2 — its logo and brand accent color, not the plain-text `Client / Affiliation` field on `Tours` (only the linked record is reliable, per the same distinction the `booking-page-publishing` skill checks).
 2. Use the client's logo and accent color for the cover page and running header, in place of Tinto's own. Keep body typography consistent (see `references/tinto-brand.md` for the fallback type system) unless the client record specifies otherwise.
 3. **If the confirmed client record still has no logo/color on file** (shouldn't happen after Step 2, but check), fall back to Tinto's own brand (`references/tinto-brand.md`) rather than shipping an unbranded or broken-looking cover page — and flag it, since that's also a booking-page gap worth fixing at the source.
 4. A small "in partnership with Tinto Travels" or equivalent footer credit is appropriate even on a client-branded document — check an existing client-branded source PDF or ask for the exact convention if none is on hand.
@@ -106,4 +105,4 @@ Deliver the finished PDF the normal way. If this itinerary is being produced to 
 
 ## Escalate rather than guess
 
-If any step in the conversational flow above can't get a clear answer — the winery name is ambiguous, web search can't confidently find a logo/brand color, a tour detail conflicts with what's already in Airtable, or `Itinerary Days` content still looks like a placeholder after being shown for confirmation — stop and ask rather than proceeding with a best guess. A guest reading a wrong, unbranded, or missing-day document is a real trip-planning and brand failure, not just a formatting issue, and it's cheaper to ask twice than to fix it after the PDF has gone out.
+If any step in the conversational flow above can't get a clear answer — the winery name is ambiguous, `tinto-add-winery-record` isn't installed and no one's confirmed how to proceed, a tour detail conflicts with what's already in Airtable, or `Itinerary Days` content still looks like a placeholder after being shown for confirmation — stop and ask rather than proceeding with a best guess. A guest reading a wrong, unbranded, or missing-day document is a real trip-planning and brand failure, not just a formatting issue, and it's cheaper to ask twice than to fix it after the PDF has gone out.
