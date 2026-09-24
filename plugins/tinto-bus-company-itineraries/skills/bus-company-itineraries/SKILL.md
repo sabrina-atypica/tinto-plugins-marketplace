@@ -7,12 +7,23 @@ description: >
   pickup/dropoff document a tour's Transport supplier (a bus or driver
   company) actually works from.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Bus Company Itineraries
 
 Produce the day-by-day driver schedule Tamara sends straight to a tour's Transport supplier. This is a **plain internal working document**, not guest-facing marketing copy and not one of Tinto's branded PDFs — see "Format and layout" below for why. **The format is not one universal template — it varies by destination** (language, header shape, level of detail). Always look up the tour's own destination convention in `references/destination-formats.md` before composing anything; don't default to whichever destination you've seen most recently.
+
+## Onboarding note added 2026-09-24 — first-use coverage check-in
+
+The very first time this skill runs for Tamara after the plugin is handed over to her (she's just installed it, hasn't used it yet, or opens with something like "what does this do" or "I just added this plugin"), lead with a short coverage check-in before doing anything else — including before working on any specific tour she may have also asked about in the same message:
+
+- Tell her which destinations already have a bus-itinerary format template on file, and that any future itinerary for one of these destinations will be built from that template: Alentejo, Loire Valley, Northern Adriatic & Slovenia, Southern Tuscany & Umbria, Castille & León.
+- Tell her which of Tinto's other destinations (per the full `Location` choice list on `Tours`, as of 2026-09-24) don't have a template yet: Porto & Douro, Coastal Tuscany, Peloponnese, Puglia, Douro, Vinho Verde, Austria. If `Tours.Location` has grown new choices since, re-check the live list rather than trusting this one as permanent.
+- Ask if she has a template ready for one of those missing destinations right now, and if so, to just drop it in the chat — it becomes a new section in `references/destination-formats.md`, the same way the existing five were built.
+- If not, tell her that's fine: the next time an actual bus itinerary is needed for one of those destinations, prompt her for a template for that specific tour then, rather than asking her to produce one for every missing destination up front (see "Escalate rather than guess").
+
+Do this once per onboarding, not on every request afterward — once she's answered (with a template or "not yet"), move straight to whatever she actually asked for.
 
 ## Rebuilt 2026-09-16
 
