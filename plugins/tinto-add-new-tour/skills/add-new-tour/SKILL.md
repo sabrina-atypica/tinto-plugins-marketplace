@@ -7,7 +7,7 @@ description: >
   in Airtable," or otherwise needs a brand-new `Tours` record created for a
   tour that doesn't exist in Airtable yet.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Add New Tour
@@ -40,13 +40,18 @@ Sourcing a new client's logo and brand color and filing them to Airtable is `tin
 With the client identified, ask the following one at a time, not as a form. Check for a duplicate before treating anything as settled: a client can have more than one tour to the same destination (different departures), and a destination can have more than one client. Match on client **and** destination **and** dates together, never on client or destination alone.
 
 1. **Destination.** Must be a real one: Alentejo, Porto & Douro, Southern Tuscany & Umbria, Coastal Tuscany, Loire Valley, Castille & León, Northern Adriatic & Slovenia, Peloponnese, Puglia, or Austria (a real, sold, one-off destination, not on the public marketing site). The `Location` field's dropdown also still has two stray leftover choices, "Douro" and "Vinho Verde", that aren't real destinations, used by nothing, and shouldn't be picked. If the destination named genuinely isn't one of the ten above, stop and ask Peter/Nélia to confirm it's real before adding a new `Location` choice: the `Destinations` table (which several other fields fall back to) needs its own row for a genuinely new destination, and that's a bigger decision than this skill should make alone.
+
+   **As soon as the destination is confirmed, check for an existing confirmed tour there** (Tinto operates across a fixed set of real destinations, so the large majority of new tours land on one already sold before, not a genuinely new one). If one exists, name it and ask directly whether to copy its reusable, non-negotiated content over for items 5 through 7 below, rather than drafting each from scratch: `Pickup` / `Drop-off Location`, `What's Included` / `What's Not Included`, `Tour Highlights`, `Hero Facts`, and `Regional Sign-Off`. Still confirm each copied piece individually rather than writing it silently, since a genuine difference (a different pickup point, a locally-adjusted inclusion) does happen even at a repeat destination. If the destination genuinely has no existing tour yet, skip this and draft each item from scratch per the conventions below.
+
+   **Never copy client-specific or negotiated content this way, template or no template**: price, capacity, dates, and status always get asked fresh regardless, since these vary by client and by departure, and copying one silently risks a wrong price or a wrong capacity on a guest-facing document.
+
 2. **Start and end dates.**
 3. **Status**: Planning, Confirmed, In Progress, Completed, or Cancelled. Ask which applies now rather than defaulting; a tour that's still being negotiated is Planning, one the client has committed to is Confirmed.
 4. **Price per person.** This is required. `Price per Person` feeds the booking page directly and renders as a literal broken price if left blank, so don't create the record without it. If it genuinely isn't set yet, say so and ask whether to hold off creating the record until it is, rather than writing a placeholder.
-5. **Max participants.**
-6. **Pickup / drop-off location** (e.g. "Lisbon → Lisbon").
-7. **Cover-page content**: a short `Overview` paragraph, `What's Included` / `What's Not Included`, and, if available, `Tour Highlights` and `Hero Facts`. See the conventions below for how to draft a starting point to confirm rather than asking for all of this from scratch.
-8. **Anything else worth recording as `Notes`** right now (a hotel on hold, a data source, a caveat) that doesn't fit a structured field.
+5. **Max participants.** If a template tour exists, its value is a reasonable default to offer (many existing tours share the same capacity by convention, not coincidence), but confirm it rather than silently copying, since a specific client's real capacity can differ.
+6. **Pickup / drop-off location** (e.g. "Lisbon → Lisbon"). Offer the template's value if one exists, confirm rather than assume it still applies.
+7. **Cover-page content**: `What's Included` / `What's Not Included`, `Tour Highlights`, and `Hero Facts`, offered from the template tour if one exists and confirmed rather than copied silently; drafted fresh per the conventions below if not. The `Overview` paragraph is worth drafting fresh even when a template exists, since a client's specific angle (which winery, which regional focus) can genuinely differ tour to tour at the same destination, so offer the template's `Overview` as a starting point to adapt, not to copy verbatim.
+8. **Anything else worth recording as `Notes`** right now (a hotel on hold, a data source, a caveat) that doesn't fit a structured field. If content was copied from a template tour, note which one and what was copied, so it's traceable later.
 
 There is no dedicated `Single Supplement` field on `Tours` (removed 2026-09-22: no clean single value existed for multi-hotel destinations). Don't create one or write to one. Single-supplement pricing lives on the `Packages` table instead, as the price difference between a Double and a Solo row for the same room, and that table is out of scope for this skill (see below).
 

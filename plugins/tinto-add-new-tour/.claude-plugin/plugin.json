@@ -1,6 +1,6 @@
 {
   "name": "tinto-add-new-tour",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Creating a brand-new Tours record in Airtable when a client signs on for a tour that doesn't exist yet: destination, dates, status, price, capacity, pickup/drop-off, cover-page content, and a generated slug, confirmed one question at a time before writing anything. For a brand-new client, hands off to tinto-add-winery-record rather than duplicating that research. Doesn't touch the day-by-day Itinerary Days (tinto-client-itinerary-pdf owns that) or checkout inventory (Packages, Room Blocks, Hotel Room Inventory, owned by tinto-batch-book-hotel-rooms and tinto-booking-pages, built only once a tour is going live for online booking).",
   "author": {
     "name": "Tinto Travels"
