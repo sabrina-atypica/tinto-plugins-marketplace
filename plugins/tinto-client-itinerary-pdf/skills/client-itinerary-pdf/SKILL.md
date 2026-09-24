@@ -10,7 +10,7 @@ description: >
   client-supplied source itinerary PDFs (e.g. the "Fox Run Vineyards
   presents..." style document).
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # Client Itinerary PDF
@@ -46,9 +46,13 @@ With the client identified (found directly in Step 1, or just created via `tinto
 
 1. **Date(s)** of the departure.
 2. **Location / destination.**
-3. **Price per person** (and single supplement, if there is one).
+3. **Price per person** (and single supplement, if there is one, derived from `Packages` per the note below, not a `Tours` field).
 4. **Max capacity.**
-5. **Whether the itinerary on record is correct.** Look up the tour in `Tours` (matching on client + dates/location from the answers above; if nothing matches, this is a genuinely new tour and there's no existing `Tours` record to check against, say so and treat every field, including the day-by-day, as new). If a `Tours` record exists, pull its linked `Itinerary Days` and show the day-by-day as currently stored, day by day if it's long, and ask for confirmation or corrections. If there's no itinerary on record yet, propose a draft day-by-day and get explicit sign-off before treating it as final; don't write a proposed itinerary to `Itinerary Days` without that confirmation.
+5. **Whether the itinerary on record is correct.** Look up the tour in `Tours` (matching on client + dates/location from the answers above).
+   - **If a `Tours` record exists**, pull its linked `Itinerary Days` and show the day-by-day as currently stored, day by day if it's long, and ask for confirmation or corrections.
+   - **If nothing matches**, this is a genuinely new tour with no `Tours` record yet. Creating that record properly (price, capacity, dates, status, slug, and everything else a new tour needs) is `tinto-add-new-tour`'s job, not this skill's: check whether it's available in this session and, if so, invoke it with the Skill tool the same way Step 2 hands off to `tinto-add-winery-record`, passing the confirmed client, destination, and dates. Once it finishes, read back the `Tours` record it created and continue below. If it isn't available, say so plainly and ask whether to install it or add the `Tours` record directly in Airtable first; don't reimplement full tour intake here.
+
+   Either way, once a `Tours` record exists (found directly, or just created via `tinto-add-new-tour`), propose a draft day-by-day if `Itinerary Days` is still empty and get explicit sign-off before treating it as final; don't write a proposed itinerary to `Itinerary Days` without that confirmation.
 
    **While showing each day, also ask if there's any personal detail or story worth adding**, something about a guide, a winemaker, a chef, a specific moment, that the concise `Itinerary Days` copy wouldn't carry but this PDF can. `Itinerary Days` is deliberately terse (see "Voice and narrative color" below for why), so this is the one point in the flow where real, firsthand color can be captured directly from the person who actually has it, rather than left out or invented later.
 
@@ -89,7 +93,7 @@ Instead, `references/destination-itineraries/<destination-slug>.md` holds one re
 
 - `Overview`: the narrative summary for the cover page. Like `Itinerary Days`, this field is terse and shared with the booking page; apply the same voice-expansion approach as the day-by-day content above, using the destination's reference file's cover copy as the model, rather than reproducing it verbatim.
 - `Price per Person`: a direct currency field on `Tours`, confirmed in Step 3.
-- `Single Supplement`: also a direct currency field on `Tours`, not something to derive. Use it directly rather than computing it from Double/Solo `Packages` rows. Only fall back to a Packages-based estimate if this field is blank and a clean Double/Solo pair exists; otherwise leave the single-supplement line off rather than guessing.
+- `Single Supplement`: there is no dedicated `Tours` field for this (removed 2026-09-22, no clean single value existed for multi-hotel destinations like Southern Tuscany & Umbria). Derive it from the tour's `Packages`: the price difference between a Double and a Solo row for the same room/property. Only show a single-supplement line on the cover page when a clean Double/Solo pair exists; otherwise leave it off rather than guessing.
 - `What's Included` / `What's Not Included`: cover-page inclusions list.
 - `Max Participants`: a direct number field on `Tours`, confirmed in Step 3; include it on the cover page the way the source itinerary PDFs do ("Limited to N participants") if it's populated.
 

@@ -49,7 +49,7 @@
     {
       "name": "tinto-client-itinerary-pdf",
       "source": "./plugins/tinto-client-itinerary-pdf",
-      "description": "Building the dated, tour-specific client itinerary PDF used to sell a tour, expanding the terse booking-page-shared Airtable copy into real narrative voice using a per-destination reference itinerary, and handing off to tinto-add-winery-record for any brand-new client rather than duplicating that research, a standalone plugin, installable on its own by anyone who needs it (e.g. Peter)."
+      "description": "Building the dated, tour-specific client itinerary PDF used to sell a tour, expanding the terse booking-page-shared Airtable copy into real narrative voice using a per-destination reference itinerary, and handing off to tinto-add-winery-record or tinto-add-new-tour for a brand-new client or tour rather than duplicating that research, a standalone plugin, installable on its own by anyone who needs it (e.g. Peter)."
     }
   ]
 }
