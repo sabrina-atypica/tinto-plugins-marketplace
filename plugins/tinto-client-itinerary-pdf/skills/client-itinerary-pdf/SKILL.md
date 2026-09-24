@@ -10,7 +10,7 @@ description: >
   client-supplied source itinerary PDFs (e.g. the "Fox Run Vineyards
   presents..." style document).
 metadata:
-  version: "0.9.0"
+  version: "0.10.0"
 ---
 
 # Client Itinerary PDF
@@ -82,6 +82,8 @@ Tinto sells tours white-labeled under the selling client's own brand (a winery, 
 Use it this way:
 
 1. **For any tour at a destination that already has a reference file, show its day-by-day to Peter/Nélia and ask directly whether it's still accurate, or whether anything needs updating** (a different guide, a closed restaurant, a swapped winery, a changed order). Don't silently assume it applies unchanged; confirm every time, since a real detail can shift even at a destination Tinto has sold before.
+
+   **Show it as the condensed, booking-page-style version, explicitly framed as such, not as a preview of the finished PDF's writing.** Say plainly, in words to this effect: "Here's the high-level itinerary as it'll show on the corresponding booking page, is this correct?", and note that the actual PDF text will be the same full, marketing-style prose Tinto's itinerary PDFs already use (the reference file's own writing), not this condensed summary. Skipping this framing risks the condensed version reading like a downgrade from Tinto's usual style, when it's just the wrong layer to judge that from.
 2. **Once confirmed, with any corrections applied, that becomes this departure's real day-by-day content**, both for the terse `Itinerary Days` rows (condensed to match the concise, booking-page-shared style every other tour's `Itinerary Days` already uses) and for the fuller narrative prose this PDF actually shows the guest. There's no separate "expand terse copy into narrative voice" step needed on top of this: the reference file's own prose, corrected as needed, is the narrative content directly. Only the client's own branding, not Fox Run's or whichever client the reference file names, goes on the cover.
 3. **If `Itinerary Days` already holds real, previously-confirmed content for this specific departure**, that stays authoritative as-is; don't overwrite it with the reference file without asking. If the two genuinely differ, ask which is right rather than assuming either one, since a previously-confirmed departure's own record could reflect a deliberate, real difference, not staleness.
 4. **Never invent a specific personal or anecdotal detail that isn't already confirmed.** A detail like "the winemaker lived 30 years in Hong Kong" or "the chef might get a Michelin star, he's only 30" is real color the reference file or Peter/Nélia supplied, not something to fabricate by extrapolation, even when it would make the copy read better. Draw color only from the reference file's confirmed text, or from whatever Peter/Nélia offer when asked in Step 3.
