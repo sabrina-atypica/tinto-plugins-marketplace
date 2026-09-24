@@ -1,7 +1,7 @@
 {
   "name": "tinto-add-winery-record",
-  "version": "0.2.0",
-  "description": "Entering an already-agreed client or affiliation's record and branding (logo, brand accent color) into Airtable's Client / Affiliation table, sourced by web search rather than a chat upload. Split out of tinto-guest-communication so it can be installed on its own, for anyone who needs this without the rest of Nélia's daily guest-communication scope.",
+  "version": "0.3.0",
+  "description": "Entering an already-agreed client or affiliation's record and branding (logo, brand accent color) into Airtable's Client / Affiliation table, sourced by web search rather than a chat upload, validated against what the booking-page generator actually needs (clean name, transparent-background landscape logo, valid hex accent color), plus an explicit wine-club discount interview step. Split out of tinto-guest-communication so it can be installed on its own, for anyone who needs this without the rest of Nélia's daily guest-communication scope.",
   "author": {
     "name": "Tinto Travels"
   }
