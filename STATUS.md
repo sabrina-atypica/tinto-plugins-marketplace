@@ -23,7 +23,7 @@ session does it, so it never depends on any one session's memory.
 | `tinto-rooming-lists` | 0.6.0 | Design rebuilt and manually tested against two real tours (Alentejo, Puglia). Not yet confirmed end to end with Tamara or a live hotel send. |
 | `tinto-bus-company-itineraries` | 0.1.0 | Original placeholder on master. In progress on a branch (`bus-company-itineraries-airtable-rebuild`), rebuilding it against a real reference document and making it destination aware. Not yet merged. |
 | `tinto-booking-pages` | 0.1.0 | Design rebuilt around the real `/api/publish-tour` endpoint, not yet watched succeed end to end on a real write. |
-| `tinto-add-winery-record` | 0.2.0 | Done and verified live, created a real client record (Vinia Wine and Kitchen) end to end. |
+| `tinto-add-winery-record` | 0.3.0 | Done and verified live (real client record, Vinia Wine and Kitchen). Updated 2026-09-24 to match the booking-page team's contract for this table: logo/color validation criteria, and an explicit wine-club discount interview step. |
 | `tinto-client-itinerary-pdf` | 0.1.0 | Done and verified twice against real data (field by field, and a live simulated request). |
 
 **Open branches not yet in this table's "master" versions above:**
