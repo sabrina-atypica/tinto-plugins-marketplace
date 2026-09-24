@@ -7,7 +7,7 @@ description: >
   pickup/dropoff document a tour's Transport supplier (a bus or driver
   company) actually works from.
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # Bus Company Itineraries
@@ -21,11 +21,11 @@ The very first time this skill runs for Tamara after the plugin is handed over t
 - Tell her which destinations already have a bus-itinerary format template on file, and that any future itinerary for one of these destinations will be built from that template: Alentejo, Loire Valley, Northern Adriatic & Slovenia, Southern Tuscany & Umbria, Castille & León.
 - Tell her which destinations don't have a template yet, split by urgency (checked against real `Tours` records as of 2026-09-24, not just the `Location` field's choice list — an unused choice with no actual tour isn't a real gap):
   - **Already has a real 2027 tour running, so a template is genuinely needed soon:** Porto & Douro, Peloponnese (Greece), Puglia, Austria. Call out Greece/Peloponnese by name if she doesn't mention it herself — that tour is confirmed and happening, this is a real "no bus itinerary provided yet" gap, not a hypothetical one.
-  - **No tour on the books yet either, so lower priority:** Coastal Tuscany, Vinho Verde.
+  - **No tour on the books yet either, so lower priority:** Coastal Tuscany.
 - Ask if she has a template ready for one of the missing destinations (the urgent ones especially) right now, and if so, to just drop it in the chat — it becomes a new section in `references/destination-formats.md`, the same way the existing five were built.
 - If not, tell her that's fine: the next time an actual bus itinerary is needed for one of those destinations, prompt her for a template for that specific tour then, rather than asking her to produce one for every missing destination up front (see "Escalate rather than guess").
 
-Don't count `Tours.Location`'s "Douro" choice as a destination of its own — as of 2026-09-24 no tour actually uses it (every real Douro-region tour uses "Porto & Douro" instead), so it looks like a stray duplicate select option, not a real gap. If `Tours.Location` has grown new choices since, or "Douro" has picked up an actual tour, re-check against live Tours records rather than trusting this list as permanent.
+Don't count `Tours.Location`'s "Douro" or "Vinho Verde" choices as destinations of their own — as of 2026-09-24 no tour actually uses "Douro" (every real Douro-region tour uses "Porto & Douro" instead), and Sabrina confirmed "Vinho Verde" was test data with no real tour behind it, not an actual Tinto destination. Both are stray select options on `Tours.Location`, not real gaps. If `Tours.Location` has grown new choices since, or either of these has picked up an actual tour, re-check against live Tours records rather than trusting this list as permanent.
 
 Do this once per onboarding, not on every request afterward — once she's answered (with a template or "not yet"), move straight to whatever she actually asked for.
 
