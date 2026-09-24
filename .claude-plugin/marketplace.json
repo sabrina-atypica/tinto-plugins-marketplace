@@ -1,6 +1,6 @@
 {
   "name": "tinto-travels-plugins",
-  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts. Two plugins are restricted to one person's daily workflow (guest communication for Nélia, supplier logistics for Tamara); every other plugin — supplier-pairing audits, hotel-block booking, rooming lists, transport itineraries, booking-page publishing, winery-record entry, client itinerary PDFs — is open to the whole team.",
+  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts. Two plugins are restricted to one person's daily workflow (guest communication for Nélia, supplier logistics for Tamara); every other plugin — supplier-pairing audits, hotel-block booking, rooming lists, transport itineraries, booking-page publishing, winery-record entry, new-tour entry, client itinerary PDFs — is open to the whole team.",
   "owner": {
     "name": "Sabrina Boesch",
     "email": "sabrina.boesch@gmail.com"
@@ -45,6 +45,11 @@
       "name": "tinto-add-winery-record",
       "source": "./plugins/tinto-add-winery-record",
       "description": "Entering an already-agreed client or affiliation's record and branding (logo, brand accent color) into Airtable, sourced by web search rather than a chat upload, for anyone who needs it (e.g. Peter)."
+    },
+    {
+      "name": "tinto-add-new-tour",
+      "source": "./plugins/tinto-add-new-tour",
+      "description": "Creating a brand-new Tours record in Airtable (destination, dates, status, price, capacity, cover-page content, slug) when a tour doesn't exist there yet, confirmed one question at a time, a standalone plugin, open to the whole team."
     },
     {
       "name": "tinto-client-itinerary-pdf",
