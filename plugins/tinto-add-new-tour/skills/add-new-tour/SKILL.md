@@ -7,7 +7,7 @@ description: >
   in Airtable," or otherwise needs a brand-new `Tours` record created for a
   tour that doesn't exist in Airtable yet.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Add New Tour
@@ -93,6 +93,8 @@ By the time this skill runs, the hotel hold behind this tour should already have
 This skill creates the tour's identity, not everything a tour eventually needs.
 
 **Day-by-day itinerary (`Itinerary Days`)**: deliberately out of scope. `tinto-client-itinerary-pdf` already has a confirm-and-draft flow for this (its Step 3, item 5), and duplicating that logic here would mean two places that can drift apart. After creating the `Tours` record, say plainly that the itinerary isn't built yet, and ask whether to hand off to `tinto-client-itinerary-pdf` right now (if it's available) to build it, or leave it for whenever someone next needs the client-facing PDF. Don't draft day-by-day content in this skill.
+
+**Suppliers (`Bookings (Confirmations)`, `Supplier Booking Lead Times`)**: out of scope, and that's deliberate. Linking a sold tour to its suppliers is the handover to ops: Tamara does it with `link-tour-suppliers` (in `tinto-confirm-supplier-pairings`), copying the most recent tour at the same destination. Nothing needs to be sent to her. Once this `Tours` record exists with Status Confirmed and no supplier rows, her daily supplier run lists it at the top of her summary as "sold, not yet linked to suppliers" until she links it. End by telling the person who created the tour exactly that, in one line: "Tamara will see this tour in her daily supplier summary and link its suppliers from there." If the tour is created with Status Planning rather than Confirmed, say that it won't appear for Tamara until it's switched to Confirmed.
 
 **Hotel-side checkout mechanics (`Room Blocks`, `Hotel Room Inventory`)**: still out of scope. Requesting and holding rooms with a hotel, and converting a sold hold into a `Room Blocks` capacity row, stays `tinto-batch-book-hotel-rooms`'s job entirely, this skill only reads that row once it exists (Step 6 above), never creates or edits it.
 
