@@ -18,7 +18,7 @@ session does it, so it never depends on any one session's memory.
 |---|---|---|
 | `tinto-guest-communication` | 0.7.0 | Done and verified. Restricted to Nelia's daily workflow. |
 | `tinto-logistics` | 0.7.0 | Done and verified. Restricted to Tamara's daily workflow. |
-| `tinto-confirm-supplier-pairings` | 0.1.0 | Done and verified, carried over unchanged from Tamara's rebuilt logistics work. |
+| `tinto-confirm-supplier-pairings` | 0.1.0 | Being rebuilt on branch `confirm-supplier-pairings-handover-rebuild` (0.3.0): no longer an audit of region-matched guesses, now the sales to ops handover skill that links a new tour's suppliers by copying the most recent tour at the same destination. Not yet tested on a real tour (first candidate: Linganore Alentejo, Oct 4 2027). |
 | `tinto-batch-book-hotel-rooms` | 0.5.0 | Done and verified. Hotel Room Inventory's Status expanded to 4 stages (Requested/Available/Not available/Sold) to match the real batch-request-before-any-tour-exists process; Half 2 now bridges a sold conversion into Room Blocks (explicit complimentary-rooms question, net-capacity math, multi-hotel-sequence append). New `check-hotel-replies` skill reads a hotel's Gmail reply and proposes the Status update, but never writes without Tamara's confirmation. Simulated end to end against live production data (a real Alentejo hotel, full Requested -> Sold -> Room Blocks bridge cycle), test records cleaned up afterward. Manual schema/frontmatter validation passed (`claude plugin validate` CLI unreachable from this session's shell). Merged to master 2026-09-24. Still pending: the actual `check-hotel-replies` scheduled task, which needs to be created from Tamara's own account once the plugin's installed there. |
 | `tinto-rooming-lists` | 0.6.0 | Design rebuilt and manually tested against two real tours (Alentejo, Puglia). Not yet confirmed end to end with Tamara or a live hotel send. |
 | `tinto-bus-company-itineraries` | 0.6.0 | Done and verified. Rebuilt against a real reference document and new Airtable fields, extended to five destination formats, and tested end to end with a full simulated data population and PDF output against a real 2027 tour. Includes a 2026-09-24 onboarding check-in for Tamara (which destinations have templates, which real running tours still need one). `claude plugin validate` passed. Merged to master 2026-09-24. |
@@ -27,6 +27,7 @@ session does it, so it never depends on any one session's memory.
 | `tinto-client-itinerary-pdf` | 0.1.0 | Done and verified twice against real data (field by field, and a live simulated request). |
 
 **Open branches not yet in this table's "master" versions above:**
+- `confirm-supplier-pairings-handover-rebuild` (0.3.0): see table row above. Goes together with `logistics-ops-sheet-pairing-gate` and `add-new-tour-initial-build`.
 - (none as of 2026-09-24 -- `batch-book-hotel-rooms-notes-and-scope` merged to master)
 
 Check `git branch -a` in the repo for the current list, since this section can go stale faster than the

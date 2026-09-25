@@ -1,7 +1,7 @@
 {
   "name": "tinto-confirm-supplier-pairings",
-  "version": "0.1.0",
-  "description": "Auditing region-matched tour-supplier pairings against real itinerary evidence, destination by destination, so daily-supplier-communications can draft safely. A standalone plugin, open to whoever runs the audit (typically Tamara), separate from the restricted tinto-logistics daily-cycle plugin.",
+  "version": "0.3.0",
+  "description": "Linking a newly sold tour to its suppliers at the sales to ops handover: copies the most recent tour at the same destination into Bookings (Confirmations) and Supplier Booking Lead Times after one confirmation from Tamara, so the daily supplier emails and bus itinerary work for the new tour. Standalone, open to whoever does ops (typically Tamara).",
   "author": {
     "name": "Tinto Travels"
   }
