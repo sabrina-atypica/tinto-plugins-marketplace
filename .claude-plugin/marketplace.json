@@ -54,7 +54,7 @@
     {
       "name": "tinto-client-itinerary-pdf",
       "source": "./plugins/tinto-client-itinerary-pdf",
-      "description": "Building the dated, tour-specific client itinerary PDF used to sell a tour — a standalone plugin, installable on its own by anyone who needs it (e.g. Peter)."
+      "description": "Building the dated, tour-specific client itinerary PDF used to sell a tour. For a repeat destination, reuses that destination's real reference itinerary directly once confirmed accurate, rather than drafting each tour's day-by-day from scratch, and hands off to tinto-add-winery-record or tinto-add-new-tour for a brand-new client or tour rather than duplicating that research, a standalone plugin, installable on its own by anyone who needs it (e.g. Peter)."
     }
   ]
 }
