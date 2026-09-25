@@ -7,7 +7,7 @@ description: >
   in Airtable," or otherwise needs a brand-new `Tours` record created for a
   tour that doesn't exist in Airtable yet.
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Add New Tour
@@ -53,7 +53,7 @@ With the client identified, ask the following one at a time, not as a form. Chec
 7. **Cover-page content**: `What's Included` / `What's Not Included`, `Tour Highlights`, and `Hero Facts`, offered from the template tour if one exists and confirmed rather than copied silently; drafted fresh per the conventions below if not. The `Overview` paragraph is worth drafting fresh even when a template exists, since a client's specific angle (which winery, which regional focus) can genuinely differ tour to tour at the same destination, so offer the template's `Overview` as a starting point to adapt, not to copy verbatim.
 8. **Anything else worth recording as `Notes`** right now (a hotel on hold, a data source, a caveat) that doesn't fit a structured field. If content was copied from a template tour, note which one and what was copied, so it's traceable later.
 
-There is no dedicated `Single Supplement` field on `Tours` (removed 2026-09-22: no clean single value existed for multi-hotel destinations). Don't create one or write to one. Single-supplement pricing lives on the `Packages` table instead, as the price difference between a Double and a Solo row for the same room, and that table is out of scope for this skill (see below).
+There is no dedicated `Single Supplement` field on `Tours` (removed 2026-09-22: no clean single value existed for multi-hotel destinations). Don't create one or write to one. Single-supplement pricing lives on the `Packages` table instead, as the price difference between a Double and a Solo row for the same room. This skill creates those rows itself once the tour's `Room Block` exists, see Step 6 below, so Packages pricing is no longer fully out of scope the way it used to be.
 
 ### Step 4: Generate the Tour Name and Slug, confirm before writing
 
@@ -64,6 +64,16 @@ There is no dedicated `Single Supplement` field on `Tours` (removed 2026-09-22: 
 ### Step 5: Create the record
 
 Only once the destination, dates, status, price, capacity, pickup/drop-off, cover-page content, Tour Name, and Slug are all confirmed, create the `Tours` record with the linked `Client` (and a short plain-text mirror in `Client / Affiliation` for display parity, ask what short form to use if it isn't obvious). Leave `Publish Status` alone (defaults to Draft; that field belongs to the booking-page publish pipeline, not tour intake).
+
+### Step 6: Convert the tour's Room Block into real Packages
+
+By the time this skill runs, the hotel hold behind this tour should already have been converted from Available to Sold and bridged into a `Room Blocks` row by `tinto-batch-book-hotel-rooms` (its Half 2), since the winery saying yes is what triggers both that conversion and this tour's creation, in parallel. This skill never touches `Room Blocks.Capacity` itself, that stays that skill's territory entirely, but it does close the one piece neither skill owns yet: turning that capacity into priced `Packages` rows, so a real single-supplement figure exists as early as the sales itinerary PDF, not only once a booking page eventually gets built.
+
+1. **Check for a `Room Blocks` row linked to this new Tour.** If none exists yet, the hold-to-sold conversion hasn't happened even though the winery already said yes. Don't guess a capacity or invent Packages without it, flag this plainly and ask whether `tinto-batch-book-hotel-rooms` needs to run first (or is already in progress) before continuing.
+2. **If a `Room Block` is linked, look up the Double and Solo `Packages` prices from the most recent existing tour at the same destination**, the same template-reuse convention used everywhere else in this skill, rather than deriving anything from the hotel's own rate quote. The price a guest actually pays is Peter's own figure, not a pass-through of what the hotel charges, and he updates it roughly once a year, so a prior tour's price is the safest starting point, never assumed current on its own.
+3. **Ask Peter directly, naming the source tour and its actual figures**: something like "here's what [prior tour] charged for Double and Solo at [destination], is this still correct, or has the price changed?" Only once he confirms or corrects both figures, and any other room-type or Bed Configuration variant the template's Room Block covers, does anything get written.
+4. **Create the new `Packages` rows** for this Tour, matching the confirmed figures and the template's room-type/occupancy shape, linked to both the `Tours` record and the existing `Room Block`. Single supplement then follows automatically as the Double-versus-Solo difference, nothing separate to compute or write.
+5. **Check the confirmed Double price against this tour's `Price per Person`** from Step 3: they should usually match (or `Price per Person` should be the lowest of the confirmed room prices). If they disagree, flag the mismatch to Peter rather than silently leaving both figures on the record.
 
 ## Conventions for drafting cover-page content
 
@@ -84,8 +94,10 @@ This skill creates the tour's identity, not everything a tour eventually needs.
 
 **Day-by-day itinerary (`Itinerary Days`)**: deliberately out of scope. `tinto-client-itinerary-pdf` already has a confirm-and-draft flow for this (its Step 3, item 5), and duplicating that logic here would mean two places that can drift apart. After creating the `Tours` record, say plainly that the itinerary isn't built yet, and ask whether to hand off to `tinto-client-itinerary-pdf` right now (if it's available) to build it, or leave it for whenever someone next needs the client-facing PDF. Don't draft day-by-day content in this skill.
 
-**Checkout inventory (`Packages`, `Room Blocks`, `Hotel Room Inventory`)**: also out of scope. Whether and when a tour goes live for online booking is a separate, later decision, not something that should happen automatically the moment a tour is recorded; several existing tours have sat with no `Packages` at all for months by deliberate choice. `tinto-batch-book-hotel-rooms` and `tinto-booking-pages` own that stage. Mention plainly that this step still needs doing before the tour could ever go live for booking, but don't build it here.
+**Hotel-side checkout mechanics (`Room Blocks`, `Hotel Room Inventory`)**: still out of scope. Requesting and holding rooms with a hotel, and converting a sold hold into a `Room Blocks` capacity row, stays `tinto-batch-book-hotel-rooms`'s job entirely, this skill only reads that row once it exists (Step 6 above), never creates or edits it.
+
+**Taking a tour live for online booking**: also still out of scope. Creating real, priced `Packages` rows (Step 6) isn't the same thing as a tour being bookable, `Publish Status`, the actual page, and everything else that makes a tour appear for guests to check out is `tinto-booking-pages`'s job, done as a separate, later decision, same as before. A tour can have real Packages and single-supplement pricing from the moment it's sold, sitting there for the sales PDF's sake, well before anyone decides to build its booking page.
 
 ## Escalate rather than guess
 
-If any step above can't get a clear answer, the client is ambiguous, `tinto-add-winery-record` isn't installed and no one's confirmed how to proceed, the named destination isn't one of the real ten, price per person isn't available yet, or a possible duplicate tour can't be ruled out from client + destination + dates alone, stop and ask rather than proceeding with a best guess. A `Tours` record with a wrong price, wrong destination, or a silent duplicate of an existing departure causes real downstream errors (a broken booking page, a supplier audit run against the wrong tour, a rooming list built for the wrong departure), not just a messy Airtable row.
+If any step above can't get a clear answer, the client is ambiguous, `tinto-add-winery-record` isn't installed and no one's confirmed how to proceed, the named destination isn't one of the real ten, price per person isn't available yet, no `Room Blocks` row exists yet for a tour that should already have one, or a possible duplicate tour can't be ruled out from client + destination + dates alone, stop and ask rather than proceeding with a best guess. A `Tours` record with a wrong price, wrong destination, or a silent duplicate of an existing departure causes real downstream errors (a broken booking page, a supplier audit run against the wrong tour, a rooming list built for the wrong departure), not just a messy Airtable row.
