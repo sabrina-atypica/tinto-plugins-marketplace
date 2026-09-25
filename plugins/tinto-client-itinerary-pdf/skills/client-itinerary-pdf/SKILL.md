@@ -10,7 +10,7 @@ description: >
   client-supplied source itinerary PDFs (e.g. the "Fox Run Vineyards
   presents..." style document).
 metadata:
-  version: "0.11.0"
+  version: "0.12.0"
 ---
 
 # Client Itinerary PDF
@@ -46,7 +46,7 @@ With the client identified (found directly in Step 1, or just created via `tinto
 
 1. **Date(s)** of the departure.
 2. **Location / destination.**
-3. **Price per person** (and single supplement, if there is one, derived from `Packages` per the note below, not a `Tours` field).
+3. **Price per person and single supplement** (see the note below for where these numbers come from, whether or not a `Room Block`/`Packages` already exist for this tour).
 4. **Max capacity.**
 5. **Whether the itinerary on record is correct.** Look up the tour in `Tours` (matching on client + dates/location from the answers above).
    - **If nothing matches**, this is a genuinely new tour with no `Tours` record yet. Creating that record properly (price, capacity, dates, status, slug, and everything else a new tour needs) is `tinto-add-new-tour`'s job, not this skill's: check whether it's available in this session and, if so, invoke it with the Skill tool the same way Step 2 hands off to `tinto-add-winery-record`, passing the confirmed client, destination, and dates. Once it finishes, read back the `Tours` record it created and continue below. If it isn't available, say so plainly and ask whether to install it or add the `Tours` record directly in Airtable first; don't reimplement full tour intake here.
@@ -94,8 +94,10 @@ Use it this way:
 **Primary source of truth: the production Airtable base**, and by this point in the flow, the specific values confirmed in Step 3. Pull the tour's own header and cover-page details from the `Tours` record:
 
 - `Overview`: the narrative summary for the cover page. Like `Itinerary Days`, this field is terse and shared with the booking page; apply the same voice-expansion approach as the day-by-day content above, using the destination's reference file's cover copy as the model, rather than reproducing it verbatim.
-- `Price per Person`: a direct currency field on `Tours`, confirmed in Step 3.
-- `Single Supplement`: there is no dedicated `Tours` field for this (removed 2026-09-22, no clean single value existed for multi-hotel destinations like Southern Tuscany & Umbria). Derive it from the tour's `Packages`: the price difference between a Double and a Solo row for the same room/property. For a tour that just came through `tinto-add-new-tour`'s hand-off in Step 3 above, real Double/Solo `Packages` rows should already exist by the time control returns here, created by that skill's own Step 6 once the tour's `Room Block` was in place, so check `Packages` directly rather than assuming it's still empty. Only show a single-supplement line on the cover page when a clean Double/Solo pair actually exists; if `Packages` is still genuinely empty (the Room Block-to-Packages conversion hasn't happened yet, or this tour has no held block at all), leave the line off and say so plainly rather than silently guessing.
+- `Price per Person`: a direct currency field on `Tours`, confirmed in Step 3. If the field is already populated, most often because Peter already confirmed a figure earlier for this same departure (a pitch-stage PDF built before the tour was sold, see the `Single Supplement` note below), show that number back to Peter/Nélia and ask them to reconfirm it's still correct rather than skipping the question, since prices can change between a pitch and a later PDF for the same tour. If the field is genuinely unset, look up the Double-occupancy precedent from the most recent existing tour at the same destination, the same lookup `tinto-add-new-tour`'s Step 6 uses, to anchor the question, then ask Peter/Nélia directly, naming the source tour and its figure, and write the confirmed answer to `Price per Person` on this `Tours` record.
+- `Single Supplement`: there is no dedicated `Tours` field for this (removed 2026-09-22, no clean single value existed for multi-hotel destinations like Southern Tuscany & Umbria). Where this number comes from depends on whether this tour already has a real `Room Block`:
+  - **If a clean Double/Solo `Packages` pair already exists** for this tour, created by `tinto-add-new-tour`'s own Step 6 once a `Room Block` was in place, derive the single supplement from it directly, the price difference between the Double and Solo rows, and use that. This is the common case for a PDF built after the tour is actually sold.
+  - **If `Packages` is still genuinely empty**, most often because this PDF is itself the sales pitch to a winery that hasn't confirmed yet and no `Room Block` exists, don't just omit the line by default. Look up the same-destination precedent's single supplement, the gap between its Double and Solo `Packages` rows, to anchor the question, then ask Peter/Nélia directly, naming the source tour and its figures, exactly the way Step 6 does for the Double price. Use the confirmed figure on this PDF's cover page, and record it in this `Tours` record's `Notes` field with a dated marker (for example `[SINGLE SUPPLEMENT CONFIRMED 2026-09-25] $X, pending real Packages once sold`), since there's no dedicated field for it and it isn't a real `Packages` row yet. Don't create a `Packages` row for this: that stays reserved for a real, `Room Block`-backed offering, created only by `tinto-add-new-tour`'s Step 6 once the tour is actually sold. If Peter/Nélia would rather not commit to a number yet, a genuinely undecided pitch-stage price, it's fine to leave the line off and say so plainly, but that should be their call to make, not the default just because `Packages` happens to be empty.
 - `What's Included` / `What's Not Included`: cover-page inclusions list.
 - `Max Participants`: a direct number field on `Tours`, confirmed in Step 3; include it on the cover page the way the source itinerary PDFs do ("Limited to N participants") if it's populated.
 
