@@ -27,7 +27,7 @@ session does it, so it never depends on any one session's memory.
 | `tinto-client-itinerary-pdf` | 0.1.0 | Done and verified twice against real data (field by field, and a live simulated request). |
 
 **Open branches not yet in this table's "master" versions above:**
-- `logistics-ops-sheet-pairing-gate` (tinto-logistics 0.8.0): the daily pairing gate now also accepts `[PAIRING CONFIRMED BY OPS SHEET ...]`, written when Supplier Booking Lead Times was synced to Bookings (Confirmations) on 2026-09-25. Until this merges, the daily cycle treats those 540 rows as unconfirmed.
+- `logistics-ops-sheet-pairing-gate` (tinto-logistics 0.8.0, skill 0.4.0): the daily drafting gate accepts the ops-sheet and handover markers; the daily ping lists tours that are sold but not linked to suppliers; new section for correcting a supplier at drafting time (updates both tables, replaces the draft). Until merged, the daily cycle treats the 540 ops-marked rows as unconfirmed.
 - (none as of 2026-09-24 -- `batch-book-hotel-rooms-notes-and-scope` merged to master)
 
 Check `git branch -a` in the repo for the current list, since this section can go stale faster than the

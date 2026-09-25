@@ -24,7 +24,9 @@ No agents or hooks — enforcement of what Tamara can and can't change is alread
 
 Requires the org's existing **Airtable** and **Gmail** connectors to be enabled for Tamara's Cowork account. No GitHub or Cloudflare access of any kind is needed.
 
-**Before turning on the daily schedule, install and run the separate `tinto-confirm-supplier-pairings` plugin once, destination by destination.** Most of production's `Supplier Booking Lead Times` table was built by matching a tour's region against a supplier's region, not from a confirmed itinerary — `daily-supplier-communications` will not draft to a pairing that hasn't been through that review, so skipping it just means the first several real runs report a growing list of "awaiting pairing confirmation" items instead of actual drafts.
+**New tours need linking to their suppliers before this plugin can contact anyone for them.** When Peter or Nélia sell a tour, it has no supplier rows at all. Every daily run lists these tours at the top of the ping as "sold, not yet linked," until Tamara links them with the `link-tour-suppliers` skill in the separate `tinto-confirm-supplier-pairings` plugin (install it too). As of 2026-09-25 the existing tours' rows were synced to `Bookings (Confirmations)` and mostly carry a confirmation marker already; the few rows still unconfirmed are asked about in the ping when they fall due.
+
+**Correcting a supplier at drafting time.** If Tamara says a supplier is wrong for a tour when a draft is about to go out, the skill updates both `Bookings (Confirmations)` and `Supplier Booking Lead Times` for that tour and redrafts to the right supplier, rather than only fixing the email.
 
 **The daily check needs a scheduled task to actually run automatically, and it needs to be set up a specific way for the "ping" feedback item to actually work:**
 
@@ -49,4 +51,4 @@ Production's `Bookings (Confirmations)` table was just populated (2026-09-14) wi
 
 ## Not in this plugin
 
-Guest and winery communications — `tinto-guest-communication` (Nélia's equivalent restricted plugin). Confirming supplier pairings before the daily check — `tinto-confirm-supplier-pairings`. Batch-booking hotel rooms — `tinto-batch-book-hotel-rooms`. Rooming lists — `tinto-rooming-lists`. Bus company itineraries — `tinto-bus-company-itineraries`. Booking-page publishing — `tinto-booking-pages`. All of these are separate installs, open to anyone on the team who needs them, not restricted the way this plugin and `tinto-guest-communication` are. Sales/BD, and anything that would change trigger rules, lead-time windows, or Airtable schema itself, stay Peter/Nina's, same boundary as the rest of Module 1.
+Guest and winery communications — `tinto-guest-communication` (Nélia's equivalent restricted plugin). Linking a newly sold tour to its suppliers — `tinto-confirm-supplier-pairings`. Batch-booking hotel rooms — `tinto-batch-book-hotel-rooms`. Rooming lists — `tinto-rooming-lists`. Bus company itineraries — `tinto-bus-company-itineraries`. Booking-page publishing — `tinto-booking-pages`. All of these are separate installs, open to anyone on the team who needs them, not restricted the way this plugin and `tinto-guest-communication` are. Sales/BD, and anything that would change trigger rules, lead-time windows, or Airtable schema itself, stay Peter/Nina's, same boundary as the rest of Module 1.
