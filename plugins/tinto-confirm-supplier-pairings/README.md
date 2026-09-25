@@ -1,33 +1,36 @@
 # Tinto Confirm Supplier Pairings
 
-Audits region-matched tour-supplier pairings against real itinerary evidence, destination by destination, so `daily-supplier-communications` (in `tinto-logistics`) can draft safely.
+Links a newly sold tour to its suppliers at the sales to ops handover, so the daily supplier emails (`tinto-logistics`) and the bus itinerary (`tinto-bus-company-itineraries`) know who is on the tour.
 
 ## Overview
 
-Most of production's `Supplier Booking Lead Times` table was built by matching a tour's region against a supplier's region — "this supplier operates in the same area as this tour," not "this specific supplier is confirmed for this specific tour." This skill walks Tamara through the region-matched pairings destination by destination, checks each one against real itinerary evidence (`Bookings (Confirmations)`) and Gmail history, and writes the result directly onto the rows `daily-supplier-communications` reads.
+Peter or Nélia sell a tour and create it with `tinto-add-new-tour`, which deliberately doesn't touch suppliers. From then on the tour shows up in Tamara's daily supplier summary as "sold, not yet linked to suppliers" until she runs this skill.
 
-**Split 2026-09-15:** this used to be bundled inside `tinto-logistics`. It's now its own standalone plugin, installable by anyone on the team who runs it — not gated behind Tamara's restricted daily-cycle plugin. It should still be run once, destination by destination, before `tinto-logistics`'s daily scheduler runs for the first time — `daily-supplier-communications` will not draft to a pairing that hasn't been through this review.
+The skill copies the most recent tour at the same destination: its day-by-day stops go into `Bookings (Confirmations)` with dates shifted to the new start date, and each emailable supplier gets its touchpoint rows in `Supplier Booking Lead Times`. Tamara confirms once ("same itinerary and suppliers as <previous tour>?") and can swap individual suppliers before anything is written. Both tables are written in the same step, so they stay consistent.
+
+If a supplier later turns out to be different for this tour, Tamara corrects it when the daily run is about to draft to that supplier. `daily-supplier-communications` then updates both tables and drafts to the right supplier.
+
+**Rebuilt 2026-09-25 (0.3.0).** This plugin used to audit supplier pairings that had been guessed by matching a tour's region to a supplier's region. That audit is obsolete: on 2026-09-25 `Supplier Booking Lead Times` was synced to `Bookings (Confirmations)`, which had been verified against Nélia's 2027 ops workbooks. Ops spreadsheets are being retired, so Airtable is now the only record and new tours are linked here instead.
 
 ## Components
 
 | Skill | Purpose |
 |---|---|
-| `confirm-supplier-pairings` | Three phases per destination batch: confirm **who** the supplier actually is (against itinerary evidence), backfill **what's already happened** with them for this tour (against Gmail), and flag (never change) **whether the timing looks right**. Resumable across sessions and destinations — only ever pulls rows not yet reviewed. |
+| `link-tour-suppliers` | Finds Confirmed tours with no supplier links, picks the most recent tour at the same destination as the template, gets one confirmation from Tamara (with any swaps), then writes `Bookings (Confirmations)` and `Supplier Booking Lead Times` together and verifies the result. |
 
-No agents or hooks — every write this skill makes is an append to `Notes` or a `Supplier` link correction, both well within ordinary day-to-day Airtable access.
+No agents or hooks. Every write is ordinary day-to-day Airtable data entry.
 
 ## Setup
 
-Requires the org's existing **Airtable** and **Gmail** connectors.
-
-No scheduled task needed — this is a manually-run audit, not a daily automated process. Run it destination by destination, in whatever order suits (soonest tour start dates first is a reasonable default), and pick it back up later exactly where it left off.
+Requires the org's existing **Airtable** connector. No scheduled task of its own: the daily run in `tinto-logistics` lists the tours waiting to be linked, and Tamara runs this skill when she's ready.
 
 ## Usage
 
 Ask Claude things like:
-- "Audit the supplier pairings for [destination]" / "Confirm suppliers for [destination]" — runs a full destination batch through all three phases.
-- "Is [supplier] really booked for [tour]?" / "What's already been sent to [supplier]?" — spot-checks a single pairing using the same evidence and logic.
+- "Link the suppliers for the new Linganore Alentejo tour"
+- "Which tours still need suppliers linked?"
+- "Do the handover for [tour]"
 
 ## Not in this plugin
 
-The daily supplier-check-and-draft cycle itself — Tamara's restricted `tinto-logistics` plugin (won't draft to a pairing this skill hasn't cleared). Batch-booking hotel rooms — `tinto-batch-book-hotel-rooms`. Rooming lists — `tinto-rooming-lists`. Bus company itineraries — `tinto-bus-company-itineraries`. Guest and winery communications — `tinto-guest-communication`. Booking-page publishing — `tinto-booking-pages`. Changing lead-time rules, trigger timing, or Airtable schema itself stays Peter/Nina's — this skill only ever flags a timing concern, never edits one.
+Drafting or sending supplier emails, and correcting a supplier at drafting time: `tinto-logistics`. Hotel room holds and hotel touchpoint rows: `tinto-batch-book-hotel-rooms`. Creating the tour itself: `tinto-add-new-tour`. Guest-facing day-by-day copy (`Itinerary Days`): `tinto-client-itinerary-pdf`. Changing lead-time rules or the Airtable schema stays with Peter and Nina.

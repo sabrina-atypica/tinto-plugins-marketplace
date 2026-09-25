@@ -19,7 +19,7 @@
     {
       "name": "tinto-confirm-supplier-pairings",
       "source": "./plugins/tinto-confirm-supplier-pairings",
-      "description": "Auditing region-matched tour-supplier pairings against real itinerary evidence, destination by destination — a standalone plugin, open to the whole team."
+      "description": "Linking a newly sold tour to its suppliers at the sales to ops handover (copies the most recent tour at the same destination, one confirmation from Tamara, writes Bookings (Confirmations) and Supplier Booking Lead Times together). A standalone plugin, open to the whole team."
     },
     {
       "name": "tinto-batch-book-hotel-rooms",
