@@ -10,7 +10,7 @@ description: >
   client-supplied source itinerary PDFs (e.g. the "Fox Run Vineyards
   presents..." style document).
 metadata:
-  version: "0.10.0"
+  version: "0.11.0"
 ---
 
 # Client Itinerary PDF
@@ -95,7 +95,7 @@ Use it this way:
 
 - `Overview`: the narrative summary for the cover page. Like `Itinerary Days`, this field is terse and shared with the booking page; apply the same voice-expansion approach as the day-by-day content above, using the destination's reference file's cover copy as the model, rather than reproducing it verbatim.
 - `Price per Person`: a direct currency field on `Tours`, confirmed in Step 3.
-- `Single Supplement`: there is no dedicated `Tours` field for this (removed 2026-09-22, no clean single value existed for multi-hotel destinations like Southern Tuscany & Umbria). Derive it from the tour's `Packages`: the price difference between a Double and a Solo row for the same room/property. Only show a single-supplement line on the cover page when a clean Double/Solo pair exists; otherwise leave it off rather than guessing.
+- `Single Supplement`: there is no dedicated `Tours` field for this (removed 2026-09-22, no clean single value existed for multi-hotel destinations like Southern Tuscany & Umbria). Derive it from the tour's `Packages`: the price difference between a Double and a Solo row for the same room/property. For a tour that just came through `tinto-add-new-tour`'s hand-off in Step 3 above, real Double/Solo `Packages` rows should already exist by the time control returns here, created by that skill's own Step 6 once the tour's `Room Block` was in place, so check `Packages` directly rather than assuming it's still empty. Only show a single-supplement line on the cover page when a clean Double/Solo pair actually exists; if `Packages` is still genuinely empty (the Room Block-to-Packages conversion hasn't happened yet, or this tour has no held block at all), leave the line off and say so plainly rather than silently guessing.
 - `What's Included` / `What's Not Included`: cover-page inclusions list.
 - `Max Participants`: a direct number field on `Tours`, confirmed in Step 3; include it on the cover page the way the source itinerary PDFs do ("Limited to N participants") if it's populated.
 
