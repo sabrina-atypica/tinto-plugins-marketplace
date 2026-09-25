@@ -10,7 +10,7 @@ description: >
   writing both Bookings (Confirmations) and Supplier Booking Lead Times in the
   same step.
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # Link a New Tour to Its Suppliers
@@ -64,6 +64,7 @@ Flag, before she answers:
 - **Different length.** If the new tour's duration (End Date minus Start Date) differs from the source's, say which days would fall outside the new tour.
 - **Different weekday.** If the new tour starts on a different weekday than the source, say so. Some destinations rotate suppliers by weekday (for example the Alentejo Wednesday and Saturday winery lunches), so the copy may put a supplier on a day it doesn't host groups.
 - **Hotels.** Hotels are booked at the point of sale by `tinto-batch-book-hotel-rooms`. Check whether the new tour already has hotel rows in Supplier Booking Lead Times, and whether they are the same hotel(s) as the source's check-in rows. If the hotel differs, the Bookings row should use the new tour's actual hotel; say so and use that one.
+- **Suppliers that aren't stops.** Some suppliers work behind the scenes and are not linked on any Bookings row, typically guides (for example the Alentejo Ducal Palace and São Cucufate guides) and sometimes transport. They only exist as `Supplier Booking Lead Times` rows on the source tour. List every non-hotel supplier that has rows on the source tour but no Bookings row, as a separate "also contacted" list, so Tamara confirms them too.
 - **Stops with no supplier.** Rows with an empty Supplier are copied as they are (the plan still needs the stop), but list them so Tamara can fill any she knows.
 
 Then ask one question: "Same itinerary and suppliers as <source tour>? Or tell me what's different." Accept any mix of: confirm all, swap the supplier on specific stops, drop a stop, add a stop. If she names a supplier that has no Suppliers record, do not create one here. Leave that stop's Supplier empty, note it, and point her to adding the supplier first.
@@ -83,7 +84,7 @@ Create in batches of up to 50 and check every batch's response count before movi
 
 ## Step 5: write Supplier Booking Lead Times
 
-For each distinct supplier on the new tour's Bookings (Confirmations) rows:
+For each distinct supplier on the new tour's Bookings (Confirmations) rows, plus each confirmed supplier from the "also contacted" list in Step 3:
 
 1. **Hotels:** skip. They belong to `tinto-batch-book-hotel-rooms`. If a hotel on the plan has no Supplier Booking Lead Times rows for this tour, flag it in the summary; do not create hotel rows here.
 2. **No email on file:** skip (typical for cultural sites and some guides). There is nobody to email, so no touchpoint rows. List these in the summary.
