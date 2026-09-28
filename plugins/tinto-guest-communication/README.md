@@ -11,6 +11,7 @@ This plugin covers Nélia's day-to-day operation of the guest journey: checking 
 | Skill | Purpose |
 |---|---|
 | `daily-guest-communications` | The core process: how the daily scheduler decides what's due, drafting into Gmail, reviewing/sending, attachment handling, and the line between what Nélia can change herself and what stays with Peter/Nina. |
+| `guest-inbox-triage` | The inbound half of the same daily check: reads new guest/winery replies, matches them to a Reservation or winery contact, classifies what each one needs, and proposes an Airtable update, a drafted reply, or a flag — always run together with `daily-guest-communications`, never on its own schedule. |
 
 No agents or hooks — enforcement of what Nélia can and can't change is already handled by her Airtable seat permissions (add/delete data, no schema changes), not by anything in this plugin.
 
@@ -18,13 +19,16 @@ No agents or hooks — enforcement of what Nélia can and can't change is alread
 
 Requires the org's existing **Airtable** and **Gmail** connectors.
 
-**The daily check needs a scheduled task to actually run automatically.** Installing this plugin alone doesn't make the daily check happen on its own — Sabrina (or whoever sets this up) needs to create a scheduled task on Nélia's account that invokes the `daily-guest-communications` skill once a day. This is a one-time setup step outside the plugin itself.
+**The daily check needs a scheduled task to actually run automatically.** Installing this plugin alone doesn't make the daily check happen on its own — Sabrina (or whoever sets this up) needs to create a scheduled task on Nélia's account that invokes `daily-guest-communications` once a day; that skill's own instructions now say to also run `guest-inbox-triage` every time, so one scheduled task covers both. This is a one-time setup step outside the plugin itself.
+
+**`guest-inbox-triage` needs `Client / Affiliation.Contact Email` populated to match winery replies.** This field was added 2026-09-28 and is likely blank for most wineries at first — winery-side matching only works once it's filled in per client; guest-side matching (via `Reservations.Buyer Email`) works immediately, no setup needed. `guest-inbox-triage` also applies a Gmail label (`Claude/Triaged`) to track what it's already reviewed — no manual Gmail setup needed, the skill creates the label itself the first time it runs if it doesn't already exist.
 
 ## Usage
 
 Ask Claude things like:
-- "Check today's guest emails" / "What's due today?" — runs the daily check and drafting.
-- "Why didn't [guest] get an email?" / "Is this a duplicate?" — troubleshoots using the same skill.
+- "Check today's guest emails" / "What's due today?" — runs the full daily check: scheduled outbound drafts (`daily-guest-communications`) and inbound triage of new replies (`guest-inbox-triage`) together.
+- "Why didn't [guest] get an email?" / "Is this a duplicate?" — troubleshoots using `daily-guest-communications`.
+- "Anything from guests today?" / "Any replies?" — same combined check, phrased from the inbound side.
 
 ## Not in this plugin
 
