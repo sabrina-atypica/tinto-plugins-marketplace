@@ -2,6 +2,14 @@
 
 Worked examples for each category in `guest-inbox-triage`'s SKILL.md, and the judgment calls between neighboring categories. When a real email doesn't clearly match one of these patterns, that's itself a signal to lean toward Category E/F (flag) rather than force it.
 
+## Post-Tour Winery Approval replies (checked before the six categories)
+
+- "Yes, happy for you to reach out to our travelers about next year — go ahead!" → clear yes; propose `Post-Tour Preference — Winery Approval` = Approved — Send to Travelers, `Post-Tour Preference — Approval Date` = the date this email was sent.
+- "Not this year, we haven't decided on next year's dates yet." → clear no; propose Declined, same date rule.
+- "Let me check with the team and get back to you." → hedged, no decision yet — Category F, not a guess. Don't propose anything.
+- A winery reply that arrives when the Client has two Tours both sitting at Pending Winery Approval, and the email doesn't say which trip it's about → Category F — flag it and name both Tours, rather than assuming it's about the more recent one.
+- The same Client's Tours are all at Not Yet Asked or already Approved/Declined (nothing Pending) when a winery email comes in → there's no outstanding request to match; classify the email through the normal six categories instead (most likely A, C, or E depending on content).
+
 ## Category A — No action needed
 
 - "Thanks so much, see you in September!"
