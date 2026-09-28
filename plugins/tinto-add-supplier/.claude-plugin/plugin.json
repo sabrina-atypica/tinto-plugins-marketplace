@@ -1,0 +1,8 @@
+{
+  "name": "tinto-add-supplier",
+  "version": "0.1.0",
+  "description": "Entering an already-agreed supplier's record into Airtable's Suppliers table: name, type, region, contact channel, language preference, and payment terms, confirmed one question at a time, mirroring tinto-add-winery-record's architecture. Dedupes against existing records before creating a new one. For hotels specifically, web-sources property photos and a guest description (confirmed before writing, same pattern as a client's logo), but never web-sources the Hotel Cancellation Policy, that field only gets written from a real answer Tamara, Nelia, or Peter already has confirmed with the hotel directly, since a wrong figure here costs real money downstream in tinto-batch-book-hotel-rooms. Doesn't touch Supplier Payments (Finance's territory) or link the new supplier to a specific tour (link-tour-suppliers or tinto-batch-book-hotel-rooms' job once the record exists).",
+  "author": {
+    "name": "Tinto Travels"
+  }
+}
