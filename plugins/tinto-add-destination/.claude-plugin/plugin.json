@@ -1,0 +1,8 @@
+{
+  "name": "tinto-add-destination",
+  "version": "0.1.0",
+  "description": "Creating the Destinations table row that Tours falls back to (Hero Image(s), Gallery, Overview, What's Included, Hotel Name/Description/Photos, and so on) when a genuinely new destination is confirmed, closing tinto-add-new-tour's former dead end there. Dedupes first, then sets Location to the exact string Tours.Location will use (matched by plain text, not a linked field). Web-sources Hero Image(s)/Gallery like tinto-add-winery-record sources a logo, but flags licensing/usage rights explicitly since these are guest-facing. Deliberately does not touch Tours.Location's dropdown choices (left to tinto-add-new-tour's own typecast write when the first real tour there is created) or Overview Map SVG/Caption (stays a manual cartography task).",
+  "author": {
+    "name": "Tinto Travels"
+  }
+}

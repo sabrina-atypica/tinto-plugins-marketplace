@@ -47,6 +47,11 @@
       "description": "Entering an already-agreed supplier's record (hotel, restaurant, winery, guide, and so on) into Airtable's Suppliers table, deduped against existing records first, mirroring tinto-add-winery-record's architecture. For hotels, web-sources property photos and a guest description, confirmed before writing, but never the Hotel Cancellation Policy, that field only gets written from a real answer already confirmed with the hotel directly, since a wrong figure costs real money downstream in tinto-batch-book-hotel-rooms. A standalone plugin, open to the whole team."
     },
     {
+      "name": "tinto-add-destination",
+      "source": "./plugins/tinto-add-destination",
+      "description": "Creating the Destinations table row (Hero Image(s), Gallery, Overview, What's Included, Hotel Name/Description/Photos, and so on) that Tours falls back to, when a genuinely new destination is confirmed. Sets Location to the exact string Tours.Location will use (plain text match, not a linked field). Web-sources Hero Image(s)/Gallery like tinto-add-winery-record sources a logo, but flags licensing/usage rights explicitly since these are guest-facing. Fires standalone or as a hand-off from tinto-add-new-tour when a named destination isn't one of the known ones. A standalone plugin, open to the whole team."
+    },
+    {
       "name": "tinto-add-winery-record",
       "source": "./plugins/tinto-add-winery-record",
       "description": "Entering an already-agreed client or affiliation's record and branding (logo, brand accent color) into Airtable, sourced by web search rather than a chat upload, for anyone who needs it (e.g. Peter)."
