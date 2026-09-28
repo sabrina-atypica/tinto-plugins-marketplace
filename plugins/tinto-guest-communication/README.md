@@ -11,7 +11,7 @@ This plugin covers Nélia's day-to-day operation of the guest journey: checking 
 | Skill | Purpose |
 |---|---|
 | `daily-guest-communications` | The core process: how the daily scheduler decides what's due, drafting into Gmail, reviewing/sending, attachment handling, and the line between what Nélia can change herself and what stays with Peter/Nina. |
-| `guest-inbox-triage` | The inbound half of the same daily check: reads new guest/winery replies, matches them to a Reservation or winery contact, classifies what each one needs, and proposes an Airtable update, a drafted reply, or a flag — always run together with `daily-guest-communications`, never on its own schedule. |
+| `guest-inbox-triage` | The inbound half of the same daily check: reads new guest/winery replies, matches them to a Reservation or winery contact, classifies what each one needs, and proposes an Airtable update, a drafted reply, or a flag — always run together with `daily-guest-communications`, never on its own schedule. Also reads a winery's reply to an outstanding Winery Approval Request and proposes the Post-Tour Preference approval/decline update. |
 
 No agents or hooks — enforcement of what Nélia can and can't change is already handled by her Airtable seat permissions (add/delete data, no schema changes), not by anything in this plugin.
 
@@ -20,6 +20,8 @@ No agents or hooks — enforcement of what Nélia can and can't change is alread
 Requires the org's existing **Airtable** and **Gmail** connectors.
 
 **The daily check needs a scheduled task to actually run automatically.** Installing this plugin alone doesn't make the daily check happen on its own — Sabrina (or whoever sets this up) needs to create a scheduled task on Nélia's account that invokes `daily-guest-communications` once a day; that skill's own instructions now say to also run `guest-inbox-triage` every time, so one scheduled task covers both. This is a one-time setup step outside the plugin itself.
+
+**The Winery Approval Request touchpoint (End+1) is now part of the scheduled daily check** (2026-09-28) — it sets `Tours.Post-Tour Preference — Winery Approval` to Pending Winery Approval when it drafts, and `guest-inbox-triage` watches for the winery's reply to move it to Approved or Declined. No separate setup needed; both fields already exist on `Tours`.
 
 **`guest-inbox-triage` needs `Client / Affiliation.Contact Email` populated to match winery replies.** This field was added 2026-09-28 and is likely blank for most wineries at first — winery-side matching only works once it's filled in per client; guest-side matching (via `Reservations.Buyer Email`) works immediately, no setup needed. `guest-inbox-triage` also applies a Gmail label (`Claude/Triaged`) to track what it's already reviewed — no manual Gmail setup needed, the skill creates the label itself the first time it runs if it doesn't already exist.
 

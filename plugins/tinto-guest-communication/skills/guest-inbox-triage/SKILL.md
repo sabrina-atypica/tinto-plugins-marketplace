@@ -10,9 +10,11 @@ description: >
   email, matching each message to a known Reservation or winery contact,
   classifying what it's about, and proposing the right response — an
   Airtable update to confirm, a drafted Gmail reply to review, or a plain
-  escalation flag — never an automatic send or an automatic write.
+  escalation flag — never an automatic send or an automatic write. Also
+  covers reading a winery's reply to an outstanding Winery Approval Request
+  and proposing the Post-Tour Preference approval/decline update.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Guest Inbox Triage
@@ -32,6 +34,22 @@ Before this skill, a guest's ad hoc email (a special request, a question, a chan
 3. **Anything else** — sender doesn't match either — is out of scope. Don't classify it, don't mention it, don't act on it. This skill only ever touches Nélia's actual lane: guests and wineries, never suppliers (that's Tamara's, per `guest-communication-reference.md`'s existing ownership boundary), and never her general inbox.
 
 **Tracking what's already been handled:** apply a Gmail label — `Claude/Triaged` — to every message once it's been classified this way, whichever category it lands in (including "no action needed"). Each run searches matched-sender mail that doesn't have this label yet, bounded to a reasonable lookback window (last 14 days) as a safety net in case a run is missed. Don't rely on read/unread state — Nélia may open an email herself before this runs, and that shouldn't cause it to be silently skipped.
+
+## Post-Tour Winery Approval replies — checked before the six categories below
+
+When a winery-side email resolves (via `Contact Email`) to a `Client / Affiliation` record, check this first, ahead of the general classification below.
+
+Look at that Client's linked `Tours`. If **exactly one** of them currently has `Post-Tour Preference — Winery Approval` = **Pending Winery Approval** (the state the Winery Approval Request touchpoint sets on `Tours` when it drafts — see `daily-guest-communications`), this email is a candidate reply to that outstanding request:
+
+- **Clear yes** (the winery approves sending the destination-preference questions to travelers) → propose setting `Post-Tour Preference — Winery Approval` to **Approved — Send to Travelers**.
+- **Clear no** (the winery declines, says not yet, or says not this year) → propose setting it to **Declined**.
+- **Hedged, partial, unclear, or about something else entirely** → don't force a read. Fall through to Category F below, same as any other ambiguous email.
+
+For a confident yes or no, propose **both** of these together in the report, exactly like every other proposed write here — shown for confirmation, never committed silently:
+- `Post-Tour Preference — Winery Approval` → the classified value.
+- `Post-Tour Preference — Approval Date` → **the date the winery's email was sent** (read from the email itself), not the date this check happens to run — this is what the End+3 fallback-send timing in `guest-journey-scope.md` needs to be accurate against.
+
+**If more than one linked Tour is Pending Winery Approval for the same Client at once**, don't guess which one the reply is about — fall through to Category F and let a human read the actual email. **If no linked Tour is currently Pending**, there's no outstanding request to match this reply against — classify the email through the normal six categories below instead (it's just ordinary winery correspondence).
 
 ## Classification — six categories, escalate when unsure
 
@@ -61,7 +79,7 @@ Same discipline `rooming-lists` and the other Airtable-writing skills in this ma
 
 Report this alongside `daily-guest-communications`' own output as one daily check, with the inbound half added as new sections:
 
-- **Proposed Airtable updates** (Categories B and D) — one line each: record, field, proposed value, and a yes/no.
+- **Proposed Airtable updates** (Categories B and D, plus a confident Post-Tour Winery Approval reply) — one line each: record, field, proposed value, and a yes/no.
 - **Drafted replies ready to review** (Category C) — same review-before-send step Nélia already does for every scheduled touchpoint draft; this is just another source feeding the same Gmail drafts folder.
 - **Flagged, no action taken** (Categories E and F) — what came in, from whom, why it's flagged, and who it actually belongs to when that's clear.
 - **Nothing needed** (Category A) — a single count, not itemized.
@@ -72,6 +90,7 @@ Report this alongside `daily-guest-communications`' own output as one daily chec
 - **Never sends an email.** Every drafted reply goes into Gmail as a draft only, exactly like every other guest/winery email in this system — Nélia reviews and sends everything herself.
 - **Never commits an Airtable write without it appearing in the report for confirmation first.** Nothing in Categories B or D lands in Airtable on its own.
 - **Never acts on an unmatched sender.**
+- **Never guesses which Tour a Winery Approval reply is about** when more than one of a Client's Tours is Pending Winery Approval at once — that's Category F, not a coin flip.
 - **Never drafts a reply for anything sorted into Category E or F.**
 - **Never touches supplier communication**, even if a guest or winery email happens to mention a hotel or supplier by name — stays strictly guest/winery, per Nélia's existing lane boundary.
 - **Never fabricates an answer** to source a Category C reply — if the real data isn't there, it's a Category E, not a guess.
