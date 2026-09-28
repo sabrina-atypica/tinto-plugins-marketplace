@@ -9,12 +9,16 @@ description: >
   guest-and-winery communications cycle: checking Airtable for what's due,
   drafting into Gmail, and the human review/send step.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Daily Guest & Winery Communications
 
 Guide Nélia through Tinto Travels' automated guest-and-winery email cycle. This skill covers two channels only — **guests and wineries** — never suppliers (hotels, restaurants, transport, cultural sites): that is Tamara's lane, in a separate plugin, and out of scope here even if asked about.
+
+## Run this together with guest-inbox-triage
+
+**Every time this skill runs, also run `guest-inbox-triage` (same plugin) as part of the same check, and report both halves together.** This skill covers what Tinto sends out on schedule; `guest-inbox-triage` covers what comes back — replies, special requests, questions — and proposes what to do about each one (an Airtable update to confirm, a drafted reply to review, or a flag). They're one daily habit for Nélia, not two separate things to remember to ask for.
 
 ## The mechanism, in outline
 
