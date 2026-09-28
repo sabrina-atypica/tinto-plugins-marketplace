@@ -1,6 +1,6 @@
 {
   "name": "tinto-travels-plugins",
-  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts. Two plugins are restricted to one person's daily workflow (guest communication for Nélia, supplier logistics for Tamara); every other plugin — supplier-pairing audits, hotel-block booking, rooming lists, transport itineraries, booking-page publishing, winery-record entry, new-tour entry, client itinerary PDFs — is open to the whole team.",
+  "description": "Self-service plugin catalog for the Tinto Travels team's Cowork accounts. Two plugins are restricted to one person's daily workflow (guest communication for Nélia, supplier logistics for Tamara); every other plugin, supplier-pairing audits, hotel-block booking, rooming lists, transport itineraries, booking-page publishing, winery-record entry, new-tour entry, client itinerary PDFs, new-supplier entry, is open to the whole team.",
   "owner": {
     "name": "Sabrina Boesch",
     "email": "sabrina.boesch@gmail.com"
@@ -40,6 +40,11 @@
       "name": "tinto-booking-pages",
       "source": "./plugins/tinto-booking-pages",
       "description": "Auditing a tour's booking-page readiness and publishing it live — a standalone plugin for whoever handles publishing, separate from Nélia's guest communication plugin."
+    },
+    {
+      "name": "tinto-add-supplier",
+      "source": "./plugins/tinto-add-supplier",
+      "description": "Entering an already-agreed supplier's record (hotel, restaurant, winery, guide, and so on) into Airtable's Suppliers table, deduped against existing records first, mirroring tinto-add-winery-record's architecture. For hotels, web-sources property photos and a guest description, confirmed before writing, but never the Hotel Cancellation Policy, that field only gets written from a real answer already confirmed with the hotel directly, since a wrong figure costs real money downstream in tinto-batch-book-hotel-rooms. A standalone plugin, open to the whole team."
     },
     {
       "name": "tinto-add-winery-record",
