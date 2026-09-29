@@ -1,6 +1,6 @@
 {
   "name": "tinto-guest-communication",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "N\u00e9lia's guide to Tinto Travels' automated guest and winery communications \u2014 checking what's due each day, drafting and sending guest/winery emails correctly, and the human review-and-send step.",
   "author": {
     "name": "Tinto Travels"

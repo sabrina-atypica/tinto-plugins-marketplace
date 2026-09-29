@@ -9,7 +9,7 @@ description: >
   guest-and-winery communications cycle: checking Airtable for what's due,
   drafting into Gmail, and the human review/send step.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Daily Guest & Winery Communications
@@ -28,7 +28,7 @@ When asked to run this check (or when picking up a scheduled run), do the follow
 
 1. **Read live, don't assume.** Look up the current trigger and dedup fields directly on `Reservations`/`Tours` in the production base rather than relying on a fixed list of touchpoints or timings — these get revised without notice, and the source of truth is always the live schema, not this document. If unsure which fields are the current trigger/dedup pair for a touchpoint, check the field descriptions or ask Nélia rather than guessing.
 2. **Identify what's due today.** A touchpoint is due if today matches its trigger condition for a given reservation, and its dedup field shows it hasn't already been drafted.
-3. **Pull the template content from Airtable**, not from memory — templates are stored and maintained there so they can be edited without a plugin update. Personalize using the reservation's and tour's own fields (guest name, tour name, winery, dates, links, etc.).
+3. **Pull the template content from Airtable**, not from memory — templates are stored and maintained there so they can be edited without a plugin update. Every touchpoint's `Email Templates` row also has a **`Subject`** field (added 2026-09-29) alongside `Template HTML` — pull it too, and use it as the Gmail draft's actual subject line. Personalize both the body and the subject using the reservation's and tour's own fields (guest name, tour name, winery, dates, links, etc.) — a placeholder that appears in `Subject` is resolved exactly the same way it would be in the body (e.g. `{{Destination}}` is always the Tour's own `Location` field, whichever touchpoint or field it shows up in; `{{Month Year}}` is the Tour's `Start Date` formatted as "Month YYYY", e.g. "March 2027"). Never leave a draft with a blank, placeholder-literal, or invented subject line.
 4. **Draft into Gmail — never send.** Every touchpoint in this cycle is Gmail-drafted only. **Do not call any Gmail send capability for a guest or winery email, under any circumstances, even if the tool used to draft it also exposes a send function.** Sending is a deliberate human step — Nélia reads every draft before it goes out. The single exception is the booking confirmation email, which is not part of this cycle at all: it fires instantly and automatically through a separate system (Resend) the moment a booking completes, with no draft and no review step. If Nélia asks about a guest not receiving a confirmation, that's a different investigation from anything in this skill — it doesn't route through Gmail drafts.
 5. **Mark the dedup field** once a draft is created, so the same email isn't drafted again tomorrow.
 6. **Report back plainly**: which reservations got a new draft, for which touchpoint, and anything that looked ambiguous (see Escalation below).
