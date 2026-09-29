@@ -10,7 +10,7 @@ This plugin covers Nélia's day-to-day operation of the guest journey: checking 
 
 | Skill | Purpose |
 |---|---|
-| `daily-guest-communications` | The core process: how the daily scheduler decides what's due, drafting into Gmail, reviewing/sending, attachment handling, and the line between what Nélia can change herself and what stays with Peter/Nina. |
+| `daily-guest-communications` | The core process: how the daily scheduler decides what's due, drafting into Gmail (body from `Email Templates.Template HTML`, subject from `Email Templates.Subject` as of 2026-09-29), reviewing/sending, attachment handling, and the line between what Nélia can change herself and what stays with Peter/Nina. |
 | `guest-inbox-triage` | The inbound half of the same daily check: reads new guest/winery replies, matches them to a Reservation or winery contact, classifies what each one needs, and proposes an Airtable update, a drafted reply, or a flag — always run together with `daily-guest-communications`, never on its own schedule. Also reads a winery's reply to an outstanding Winery Approval Request and proposes the Post-Tour Preference approval/decline update. |
 
 No agents or hooks — enforcement of what Nélia can and can't change is already handled by her Airtable seat permissions (add/delete data, no schema changes), not by anything in this plugin.
