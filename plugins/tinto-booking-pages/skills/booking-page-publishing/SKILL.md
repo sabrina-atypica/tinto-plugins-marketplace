@@ -44,7 +44,7 @@ Pull the tour's record from the production Airtable base and check each of these
 | Linked `Itinerary Days` | Populated, matches the tour's actual confirmed schedule | Guests see no day-by-day content, or content that doesn't match what they booked |
 | Linked `Packages` | At least one row, `Live Status` = Bookable (not Pre-registration or another status) | Nothing for checkout to sell — page renders but guests can't book |
 
-**Also check, not blocking but worth knowing:** "X rooms left" style messaging should read capacity from the `Room Blocks` table (one shared `Capacity` per physical room block, linked to the Tour and its `Packages` rows) — not from `Packages.Capacity (deprecated - use Room Block)`, which is deprecated precisely because it used to double-count Double/Solo rows sharing one physical block (see the `rooming-lists` skill in the Logistics plugin for detail). If the tour has no linked Room Block yet, or its Capacity is blank, don't show a remaining-rooms number at all rather than guessing.
+**Also check, not blocking but worth knowing:** "X rooms left" style messaging should read capacity from the `Hotel Rooms Booked w/ Hotel` table (one shared `Capacity` per physical room block, linked to the Tour and its `Packages` rows) — not from `Packages.Capacity (deprecated - use Hotel Rooms Booked w/ Hotel)`, which is deprecated precisely because it used to double-count Double/Solo rows sharing one physical block (see the `rooming-lists` skill in the Logistics plugin for detail). If the tour has no linked Hotel Rooms Booked w/ Hotel yet, or its Capacity is blank, don't show a remaining-rooms number at all rather than guessing.
 
 ## When a tour isn't ready: a specific suggestion for every gap, not a checklist of failures
 

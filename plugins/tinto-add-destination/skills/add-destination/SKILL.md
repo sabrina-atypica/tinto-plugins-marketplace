@@ -90,7 +90,7 @@ Tell the person plainly which fields weren't filled and why (not yet decided, no
 
 **Creating the actual `Tours` record** for a departure to this destination is `tinto-add-new-tour`'s job, not this skill's; this skill only creates the standalone `Destinations` row. If this skill was invoked as a hand-off from `tinto-add-new-tour` mid-flow, confirm the row's created and return control to it rather than continuing further.
 
-**Suppliers, Room Blocks, Packages** and everything else downstream of an actual tour existing stay exactly where they already live (`tinto-add-supplier`, `tinto-batch-book-hotel-rooms`, `tinto-add-new-tour`'s own Step 6).
+**Suppliers, Hotel Rooms Booked w/ Hotel, Packages** and everything else downstream of an actual tour existing stay exactly where they already live (`tinto-add-supplier`, `tinto-batch-book-hotel-rooms`, `tinto-add-new-tour`'s own Step 6).
 
 ## After entering
 

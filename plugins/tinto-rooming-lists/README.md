@@ -22,7 +22,7 @@ A reporting task built from confirmed `Reservations` (one row per booked room, n
 
 | Skill | Purpose |
 |---|---|
-| `rooming-lists` | Pulls booked-room data for a tour from `Reservations` (filtered directly by Tour) and their linked `Participants`/`Packages` records — room number (parsed from Notes), casual room names, headcount, bed configuration, per-guest passport details, food restrictions — and builds a spreadsheet (English tab, plus the hotel's local language tab when it isn't already English) via the xlsx skill, matching Tinto's real rooming-list format. For a tour with more than one hotel on record, builds one workbook per hotel using the `Tour Accommodation` table. Deliberately avoids the deprecated `Packages.Capacity` field for any "rooms remaining" question — points to the newer `Room Blocks` table instead. |
+| `rooming-lists` | Pulls booked-room data for a tour from `Reservations` (filtered directly by Tour) and their linked `Participants`/`Packages` records — room number (parsed from Notes), casual room names, headcount, bed configuration, per-guest passport details, food restrictions — and builds a spreadsheet (English tab, plus the hotel's local language tab when it isn't already English) via the xlsx skill, matching Tinto's real rooming-list format. For a tour with more than one hotel on record, builds one workbook per hotel using the `Tour Accommodation` table. Deliberately avoids the deprecated `Packages.Capacity` field for any "rooms remaining" question — points to the newer `Hotel Rooms Booked w/ Hotel` table instead. |
 
 No agents or hooks.
 

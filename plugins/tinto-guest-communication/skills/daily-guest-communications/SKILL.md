@@ -35,7 +35,7 @@ When asked to run this check (or when picking up a scheduled run), do the follow
 
 ## Payment touchpoints — complimentary rooms never get chased
 
-A complimentary ("comp") room is a free room a hotel gives the tour organizer or winery. It's still its own Reservation record (so it counts against Room Block availability), but it owes nothing — no deposit, no balance. Reservations has a `Complimentary` checkbox for this (field ID `fldLEGRfKvV35iMd7`).
+A complimentary ("comp") room is a free room a hotel gives the tour organizer or winery. It's still its own Reservation record (so it counts against Hotel Rooms Booked w/ Hotel availability), but it owes nothing — no deposit, no balance. Reservations has a `Complimentary` checkbox for this (field ID `fldLEGRfKvV35iMd7`).
 
 For the **Final Payment** touchpoint — and the **Payment Follow-Up** touchpoint — exclude any Reservation where `Complimentary` is checked from the list of reservations due an email, before drafting. Check this flag directly. Do not treat Balance Due reading zero, or Total Price being zero, or Payment Status not saying "Paid," as a substitute — a comp's Payment Status may not read "Paid" at all, so the balance math isn't a reliable stand-in for the explicit flag.
 
