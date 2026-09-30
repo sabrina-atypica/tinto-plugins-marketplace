@@ -9,7 +9,7 @@ description: >
   guest-and-winery communications cycle: checking Airtable for what's due,
   drafting into Gmail, and the human review/send step.
 metadata:
-  version: "0.4.1"
+  version: "0.5.0"
 ---
 
 # Daily Guest & Winery Communications
@@ -32,6 +32,20 @@ When asked to run this check (or when picking up a scheduled run), do the follow
 4. **Draft into Gmail — never send.** Every touchpoint in this cycle is Gmail-drafted only. **Do not call any Gmail send capability for a guest or winery email, under any circumstances, even if the tool used to draft it also exposes a send function.** Sending is a deliberate human step — Nélia reads every draft before it goes out. The single exception is the booking confirmation email, which is not part of this cycle at all: it fires instantly and automatically through a separate system (Resend) the moment a booking completes, with no draft and no review step. If Nélia asks about a guest not receiving a confirmation, that's a different investigation from anything in this skill — it doesn't route through Gmail drafts.
 5. **Mark the dedup field** once a draft is created, so the same email isn't drafted again tomorrow.
 6. **Report back plainly**: which reservations got a new draft, for which touchpoint, and anything that looked ambiguous (see Escalation below).
+
+## Journey start date: nothing dated before it is ever drafted
+
+Before identifying anything as due, read the **journey start date** from the production base's `Automation Config` table (`tblgshihv7ykAGTty`): the record whose `Key` (`fldxVcuGaBEjyxi8m`) is `GUEST_JOURNEY_START_DATE`, value in `Value` (`fldBJsjy0uy1hUD9l`, an ISO date, set to 2026-10-05 when the booking pages and email journey went live).
+
+- **Draft a touchpoint only if its own trigger date is on or after the journey start date.** A touchpoint whose date falls before it is skipped silently for good: don't draft it and don't tick its "Email Drafted" box. There is no catch-up.
+- This applies to every Reservation, whenever it was booked, and to the per-tour Winery Approval Request. Bookings made before go-live (through the old booking channels) therefore join the journey from the start date onwards: they never get a Welcome (its date, Deposit Date + 2 days, is before the start date), but they do get Get Excited, Final Payment, 6-Weeks-Out and the post-trip emails wherever those dates are still ahead.
+- If the `GUEST_JOURNEY_START_DATE` record is missing or its value isn't a valid date, draft nothing and tell Nélia; never fall back to "no start date".
+- The date is changed in that Airtable record only, never in this skill. Changing it is Peter, Nina or Sabrina's call, not Nélia's.
+- When reporting back, mention the start date in one line and how many touchpoints it skipped (a count, not a list).
+
+## Final Payment and Payment Follow-Up: never treat a missing Total Price as paid
+
+Many bookings made through the old Stripe payment links have no `Total Price` (`fldtBIm1TG1wpbiRB`) in Airtable, which makes `Balance Due` negative. For **Final Payment** and **Payment Follow-Up**, if `Total Price` is blank or 0 on a Reservation that isn't `Complimentary`, do **not** skip it as "already paid" and do **not** tick its "Email Drafted" box. Skip drafting for now, and flag the Reservation by buyer name and tour as "Total Price missing" so someone can add the price; the email then goes out on the next check after the price is filled in. Only a Reservation with a real `Total Price` and a `Balance Due` of 0 or less counts as already paid.
 
 ## Payment touchpoints — complimentary rooms never get chased
 
