@@ -9,7 +9,7 @@ description: >
   guest-and-winery communications cycle: checking Airtable for what's due,
   drafting into Gmail, and the human review/send step.
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Daily Guest & Winery Communications
@@ -37,7 +37,7 @@ When asked to run this check (or when picking up a scheduled run), do the follow
 
 A complimentary ("comp") room is a free room a hotel gives the tour organizer or winery. It's still its own Reservation record (so it counts against Room Block availability), but it owes nothing — no deposit, no balance. Reservations has a `Complimentary` checkbox for this (field ID `fldLEGRfKvV35iMd7`).
 
-For the **Final Payment** touchpoint — and the **Payment Follow-Up** touchpoint once it's built — exclude any Reservation where `Complimentary` is checked from the list of reservations due an email, before drafting. Check this flag directly. Do not treat Balance Due reading zero, or Total Price being zero, or Payment Status not saying "Paid," as a substitute — a comp's Payment Status may not read "Paid" at all, so the balance math isn't a reliable stand-in for the explicit flag.
+For the **Final Payment** touchpoint — and the **Payment Follow-Up** touchpoint — exclude any Reservation where `Complimentary` is checked from the list of reservations due an email, before drafting. Check this flag directly. Do not treat Balance Due reading zero, or Total Price being zero, or Payment Status not saying "Paid," as a substitute — a comp's Payment Status may not read "Paid" at all, so the balance math isn't a reliable stand-in for the explicit flag.
 
 This exclusion is scoped to payment touchpoints only — it is not a blanket opt-out. The guest in a comp room is still traveling, so Welcome, Mid-Trip, 6-Weeks-Out, the Winery Approval Request, and the merged Post-Trip email are unaffected, unless Peter or Nina decide otherwise.
 
