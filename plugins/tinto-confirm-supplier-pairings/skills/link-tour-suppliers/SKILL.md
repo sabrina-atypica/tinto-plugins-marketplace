@@ -10,7 +10,7 @@ description: >
   writing both Bookings (Confirmations) and Supplier Booking Lead Times in the
   same step.
 metadata:
-  version: "0.3.1"
+  version: "0.4.0"
 ---
 
 # Link a New Tour to Its Suppliers
@@ -104,7 +104,7 @@ For each distinct supplier on the new tour's Bookings (Confirmations) rows, plus
 | Cultural Site / Garden | Cultural Site / Garden | 60 days | 28 days |
 | Entertainment | Entertainment | 60 days | 28 days |
 | Transport | Transport | 210 days | 28 days |
-| Tour Guides | Tour Guides | 180 days | none |
+| Tour Guides | Tour Guides | 180 days | 28 days (final headcount, since 2026-09-30) |
 
    These rows get Confidence `Draft estimate — needs confirming` (exact option name). The lead time is a draft; the pairing itself is confirmed by the handover marker below.
 
