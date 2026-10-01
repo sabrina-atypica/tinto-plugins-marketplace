@@ -10,7 +10,7 @@ description: >
   Gmail (English-first, thread-aware), the human review/send step, and the
   end-of-run ping.
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # Daily Supplier Communications
@@ -27,6 +27,7 @@ When asked to run this check (or when picking up a scheduled run):
 1. **Read live, don't assume.** Pull `Supplier Booking Lead Times` and cross-reference the linked `Tour` and `Supplier` records directly in the production base. If unsure which field is the current trigger for a touchpoint, check `logistics-reference.md` or ask Tamara rather than guessing.
 2. **Identify what's due today** — First Contact (rolling, per category lead time; hotels excluded, see `batch-book-hotel-rooms`), Final Reconfirmation (28 days out), Room Count Reconciliation and Hotel Final Confirmation (hotel-only, see `logistics-reference.md`) — for every row whose `Booking Request Status` is "Not Due Yet" (or blank — treat blank the same way) and whose due condition is now met. **Season Reconfirmation is a separate check, not a row check — see its own section below.** It runs every day alongside this one, but it isn't triggered by any row's due date, so don't look for it in the row sweep above.
 3. **Check the pairing is actually confirmed before drafting to it** — see "Gate: don't draft to an unconfirmed pairing," below. This is a hard check, not a nice-to-have: a meaningful share of this table was built by matching a tour's region against a supplier's region, not from a confirmed itinerary, and drafting to the wrong supplier is a worse outcome than a short delay.
+3b. **For hotel rows, confirm the hotel first**: see "Hotel check: confirm the hotel before drafting," below. Also a hard check: a hotel row only drafts if `Tour Accommodation` lists that hotel for that tour with a `Hotels Confirmed Date`.
 4. **Draft each one that passes the gate** — see "How to draft," below. This is where all three of Tamara's feedback items apply.
 5. **Mark the row** — move it to "Due — Draft Needed" then "Drafted" once the Gmail draft exists, same as the existing scheduler convention. Do this per-row, not in bulk, so a failure partway through doesn't leave a row silently un-drafted.
 6. **End every run with the ping** — see "End of every run," below. This is not optional and not a summary you write only when something interesting happened — it is the entire point of this skill from Tamara's side.
@@ -38,7 +39,7 @@ Season Reconfirmation is genuinely different from every other touchpoint in this
 Run this check every day, right alongside the row-based check above, in this order:
 
 1. **Determine the two candidate trigger dates that have already passed.** The most recent November 3rd on or before today (this year's, if today's on or after Nov 3, otherwise last year's), and the most recent April 1st on or before today (same logic). This gives a built-in catch-up: a scheduler outage or a gap before the scheduled task existed doesn't silently skip a whole season.
-2. **Spring check.** The Spring season being reconfirmed = March–July of (that November 3rd's year + 1). Dedup key = `SEASON_RECONFIRMATION_SPRING_<that year+1>`. Look this Key up in production's **Automation Config** table (`Key`/`Value`/`Notes` fields). If a record with this Key already exists, that Spring sweep already ran — skip it entirely. If it does not exist, the sweep is due: find every Confirmed Tour with Start Date in that March–July window, and for each, every distinct supplier already linked to it, whatever its category (any existing `Supplier Booking Lead Times` row for that Tour, any Label, deduped by Supplier). Since 2026-09-30 this covers every supplier type, tour guides, cooking classes, cultural sites, wine bars and the rest included (Sabrina's decision, see `supplier-timing-rule-changes-2026-09-30.md`); before that it was Hotel, Winery, Restaurant and Transport only. Run the same pairing gate as everywhere else in this skill (a "Draft estimate — needs confirming" pairing with no `[PAIRING CONFIRMED...]`/`[PAIRING CORRECTED...]` marker, whether by Tamara, at handover or by the ops sheet, still doesn't get drafted here either) and the same Language Preference / placeholder-email checks from "How to draft." Draft a lighter-touch "still on for these dates, more detail closer to the time" email for each qualifying (Tour, Supplier) pair — not a booking request, and not the Final Reconfirmation headcount/dietary ask.
+2. **Spring check.** The Spring season being reconfirmed = March–July of (that November 3rd's year + 1). Dedup key = `SEASON_RECONFIRMATION_SPRING_<that year+1>`. Look this Key up in production's **Automation Config** table (`Key`/`Value`/`Notes` fields). If a record with this Key already exists, that Spring sweep already ran — skip it entirely. If it does not exist, the sweep is due: find every Confirmed Tour with Start Date in that March–July window, and for each, every distinct supplier already linked to it, whatever its category (any existing `Supplier Booking Lead Times` row for that Tour, any Label, deduped by Supplier). Since 2026-09-30 this covers every supplier type, tour guides, cooking classes, cultural sites, wine bars and the rest included (Sabrina's decision, see `supplier-timing-rule-changes-2026-09-30.md`); before that it was Hotel, Winery, Restaurant and Transport only. Run the same pairing gate and, for hotels, the same hotel check as everywhere else in this skill (a "Draft estimate — needs confirming" pairing with no `[PAIRING CONFIRMED...]`/`[PAIRING CORRECTED...]` marker, whether by Tamara, at handover or by the ops sheet, still doesn't get drafted here either) and the same Language Preference / placeholder-email checks from "How to draft." Draft a lighter-touch "still on for these dates, more detail closer to the time" email for each qualifying (Tour, Supplier) pair — not a booking request, and not the Final Reconfirmation headcount/dietary ask.
 3. **Fall check.** Same logic, Fall season = September–November of that April 1st's year (same year, not +1). Dedup key = `SEASON_RECONFIRMATION_FALL_<that year>`.
 4. **If neither Spring nor Fall is due today** — the common case almost every day of the year — say so in one line in the ping and move on. Don't pad the summary.
 5. **After every draft in a sweep succeeds:** append `[SEASON RECONFIRMED SPRING-<year> <today>]` (or `FALL-<year>`) to the Notes of every `Supplier Booking Lead Times` row belonging to that (Tour, Supplier) pair — same append-only convention, and same "mark every row in the pairing" pattern `confirm-supplier-pairings` already uses, not just one. Then write one new Automation Config record: `Key` = `SEASON_RECONFIRMATION_SPRING_<year>` (or `FALL_<year>`), `Value` = today's date, `Notes` = which tours/suppliers this sweep covered.
@@ -61,6 +62,35 @@ Every row in `Supplier Booking Lead Times` has a `Confidence` field. Before draf
 
 This gate applies every run. New tours no longer start with guessed pairings: they get no rows at all until Tamara links them with `link-tour-suppliers` (step 0 lists them), and those rows carry the handover marker. Rows without any marker are leftovers from the original region-matching and from the 9 tours that have no ops sheet.
 
+## Hotel check: confirm the hotel before drafting
+
+`Tour Accommodation` (table `tbl3TDblqvFSnx0Iu`) is the single master list of which hotels belong to which tour. It was reconciled against the "Hotel Reservations & Payments" workbook on 2026-09-30 (see `tour-accommodation-master-sync-2026-09-30.md`). `Supplier Booking Lead Times` is only the contact schedule, and in the past it held hotel rows that were guesses. So before drafting any email for a row whose `Supplier Category` is **Hotel**, check the hotel against `Tour Accommodation`. This applies to every hotel touchpoint (Room Count Reconciliation, Rooming List, Final Confirmation) and to hotels in the Season Reconfirmation sweep.
+
+Run the check once per tour and hotel pair per run, not once per row, so Tamara gets one question per hotel and not three.
+
+1. Find the `Tour Accommodation` rows linked to the same tour (field `Tour`, `fldqrS2ivmYE6mFEi`). Each row is one stop of the tour.
+2. On those rows, collect the hotels linked in `Hotels` (`fldrJjYlFs0y69PH7`). One stop can link several hotels when the hotel is assigned from a pool.
+3. The check passes only if both are true:
+   - the row's `Supplier` (`fldOWcAbMJDFj6T64`) is one of the hotels linked on a `Tour Accommodation` row for that tour, and
+   - that same `Tour Accommodation` row has a value in `Hotels Confirmed Date` (`fldf5C2uVkexUZzZx`).
+4. **Passes:** continue exactly as normal (pairing gate, drafting, marking the row).
+5. **Fails:** do not create a draft. Leave the row's `Booking Request Status` exactly as it is, so the next run picks it up again. Add the tour and hotel to the "Needs Tamara's confirmation" section of the ping, with the reason, and ask her to confirm the hotel is right for the tour.
+6. Once Tamara confirms, a person fills in `Hotels Confirmed Date` in `Tour Accommodation`. **Never fill in that field yourself, and never edit `Tour Accommodation` at all.** The next run then passes the check and drafts as normal.
+
+The reasons to give, by case:
+
+- **No `Tour Accommodation` rows for the tour at all:** "this tour has no hotels in Tour Accommodation."
+- **The hotel isn't on any of the tour's stops:** "this hotel isn't listed for this tour in Tour Accommodation." If the tour's stops do have hotels, name them, for example "Tour Accommodation lists Castellano Hotel for this tour, not Amalie Suites."
+- **The hotel is listed but its stop has no `Hotels Confirmed Date`:** "this hotel is listed for this tour but not yet confirmed (no Hotels Confirmed Date)."
+
+Cases to handle the same way every time:
+
+- **Pooled hotels** (for example the Peloponnese tours, where one stop links three hotels): passes if the row's hotel is any one of the stop's hotels and that stop has a `Hotels Confirmed Date`.
+- **Several stops per tour** (for example Porto and Douro, or Austria): check each hotel against its own stop. One stop being unconfirmed doesn't hold back a hotel on another, confirmed stop.
+- **Non-hotel suppliers** (wineries, restaurants, transport, guides and the rest): no hotel check, unchanged.
+
+If a hotel fails this check on a tour that isn't expected to be unconfirmed, it's a data problem, not something to work around: report it plainly in the ping, don't draft, and don't edit any table to make it pass.
+
 ## When Tamara says a supplier is wrong for a tour
 
 New tours are linked by copying the most recent tour at the same destination, so the moment a draft is about to go to a supplier is when Tamara is most likely to notice "not this restaurant for this tour, we use X." When she says that (while reviewing a run, or about a draft already in Gmail), fix the data, not only the email. The bus itinerary and every later touchpoint read these tables, so an email-only fix leaves them wrong.
@@ -71,6 +101,8 @@ New tours are linked by copying the most recent tour at the same destination, so
 4. **Check what already went to the old supplier.** If any of the old supplier's rows for this tour are already `Drafted` or `Sent`, tell Tamara plainly: the old supplier may be expecting this group. Offer to draft a short cancellation or change note to them (draft only, same rules as every other supplier email). Never assume one isn't needed.
 5. **Replace the draft.** If a Gmail draft to the old supplier exists for this touchpoint, delete that draft (`delete_draft`), then draft to the new supplier following "How to draft" (thread check included), and mark the row `Drafted` as usual.
 6. **Confirm back** exactly what changed: which Bookings rows, which lead-time rows, which draft was replaced, and whether a note to the old supplier is pending.
+
+**Hotels are the exception.** If she says a hotel is wrong, don't change any hotel rows through this path: the hotel has to be corrected in `Tour Accommodation` first, by a person, and confirmed there. Say so, and leave the rows as they are until then.
 
 Only the tour Tamara names changes. If she says the change applies to all future tours at this destination, still change only this tour's rows; the next tour linked by `link-tour-suppliers` copies from the most recent tour, so the change carries forward on its own.
 
@@ -121,6 +153,7 @@ This is the second piece of Tamara's feedback, and it's a hard requirement on ev
 - Any WhatsApp-preferred suppliers needing a manual copy-over.
 - **Whether a Season Reconfirmation sweep ran today** — name the season and year if one did (and how many suppliers it covered), or say plainly "no season sweep due today" if not. If a sweep started but didn't fully complete (see the Season Reconfirmation section's safety rule), say exactly which suppliers are still pending so it's clear tomorrow's run will retry, not skip, them.
 - Anything skipped (a placeholder contact email, an unrecognized row, a blocked no-reply escalation) — same escalation conventions as the rest of Module 1.
+- **Needs Tamara's confirmation** (hotel check), as its own short section at the end: one line per tour and hotel pair that was due but held back, with the reason (no hotels for the tour in Tour Accommodation, hotel not listed for the tour, or listed but no Hotels Confirmed Date). Ask her to confirm whether the hotel is right for the tour, and remind her that someone needs to fill in Hotels Confirmed Date in Tour Accommodation before the email can be drafted.
 - If genuinely nothing was due today, still send this — a short, honest "nothing due today" line. A silent run is not a successful ping; the whole point is that Tamara doesn't have to go check Airtable herself to know the answer.
 
 This overview only actually reaches her as a real "ping" if the scheduled task that invokes this skill is bound to her own account with push notifications on — see the plugin README's Setup section. If you're ever running this skill inside an ordinary chat with Tamara rather than a scheduled firing, the same overview still applies — just address it to her directly in that conversation.

@@ -8,7 +8,7 @@ description: >
   room hold, record a hotel's reply to one, or turn a confirmed block into
   a sold tour's actual booking.
 metadata:
-  version: "0.5.0"
+  version: "0.5.1"
 ---
 
 # Batch-Booking Hotel Rooms
@@ -58,6 +58,8 @@ This has **three required steps** — doing only one or two of them is a real, d
    - **Final Confirmation** — leave `Booking Lead Time (Days Before Tour Start)` blank; this touchpoint triggers at 70% tour capacity, not on a day count (`logistics-reference.md`, "Hotel Final Confirmation").
 
    **Before creating anything, check whether these rows already exist for this Tour + Hotel pairing** — this is the normal case, not a rare one: `confirm-supplier-pairings` routinely pre-seeds region-matched draft rows (`Confidence` = "Draft estimate — needs confirming") for a tour's likely hotel well before it actually sells. If draft rows already exist for this Tour and the hotel that was actually held (or a hotel close enough that Tamara confirms it's the same one), **update them in place** — correct the `Supplier` link if the draft guessed a different hotel, fill in real lead-time values, and leave `Confidence`/`Booking Request Status` for Tamara or `confirm-supplier-pairings` to promote once confirmed — rather than creating a second, duplicate set of three rows. Only treat it as a genuine duplicate (escalate, don't silently create a second row) when a row already exists for this exact hotel with `Confidence` already "Confirmed by Peter/Nina (internal process)" or a populated `Booking Request Status` beyond "Not Due Yet" — that's a sign this pairing was already converted once.
+
+   **Note (2026-10-01):** `daily-supplier-communications` will only draft emails for these three rows once `Tour Accommodation` lists this hotel for this tour with a `Hotels Confirmed Date` (its "Hotel check"). This skill doesn't write to `Tour Accommodation`. When you confirm back, remind Tamara that the hotel must be on the tour's `Tour Accommodation` stop, with `Hotels Confirmed Date` filled in by a person, before the hotel emails will draft.
 
 Confirm back to Tamara exactly what was updated/created — the `Hotel Rooms Requested` write (including the complimentary-room count), the `Hotel Rooms Booked w/ Hotel` write (including the net capacity and whether it was a new block or an append to an existing sequence), and all three `Supplier Booking Lead Times` rows (or which of the three were updated versus newly created) — not just a generic "done." This is easy to half-do without noticing.
 
