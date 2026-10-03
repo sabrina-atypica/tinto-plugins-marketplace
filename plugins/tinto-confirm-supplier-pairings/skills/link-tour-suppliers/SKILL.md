@@ -10,7 +10,7 @@ description: >
   writing both Bookings (Confirmations) and Supplier Booking Lead Times in the
   same step.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # Link a New Tour to Its Suppliers
@@ -89,19 +89,19 @@ For each distinct supplier on the new tour's Bookings (Confirmations) rows, plus
 1. **Hotels:** skip. They belong to `tinto-batch-book-hotel-rooms`. If a hotel on the plan has no Supplier Booking Lead Times rows for this tour, flag it in the summary; do not create hotel rows here.
 2. **No email on file:** skip (typical for cultural sites and some guides). There is nobody to email, so no touchpoint rows. List these in the summary.
 3. **Already has rows for this tour:** skip, never duplicate.
-4. **Otherwise, copy the touchpoints from the source tour.** If the source tour has Supplier Booking Lead Times rows for the same supplier, create the same set for the new tour: same Label suffix (for example ` (Final Reconfirmation)`), Supplier Category, Booking Lead Time and Confidence. This keeps any lead time Peter or Nina have already confirmed.
+4. **Otherwise, copy the touchpoints from the source tour**, except that a source tour's `(Final Reconfirmation)` row for a Restaurant, Wine Bar, Activity / Tour, Cultural Site or Cultural Site / Garden supplier is never copied (those types have had a single 30-day email since 2026-10-03), and a garden's first-contact row is created at 30 days whatever the source says. If the source tour has Supplier Booking Lead Times rows for the same supplier, create the same set for the new tour: same Label suffix (for example ` (Final Reconfirmation)`), Supplier Category, Booking Lead Time and Confidence. This keeps any lead time Peter or Nina have already confirmed.
 5. **If the source has no rows for that supplier** (typically a supplier Tamara swapped in), use the standard draft set for its type:
 
 | Supplier Type | Supplier Category | First contact row | Final Reconfirmation row |
 |---|---|---|---|
 | Winery | Winery | 60 days | 28 days |
-| Restaurant, Winery / Restaurant | Restaurant | 30 days | 28 days |
-| Wine Bar | Wine Bar | 30 days | 28 days |
-| Activity / Tour | Activity / Tour | 30 days | 28 days |
-| Cultural Site | Cultural Site | 30 days | 28 days |
+| Restaurant, Winery / Restaurant | Restaurant | 30 days (includes final headcount and food sensitivities) | none (since 2026-10-03) |
+| Wine Bar | Wine Bar | 30 days (includes final headcount and food sensitivities) | none (since 2026-10-03) |
+| Activity / Tour | Activity / Tour | 30 days (includes final headcount) | none (since 2026-10-03) |
+| Cultural Site | Cultural Site | 30 days (includes final headcount) | none (since 2026-10-03) |
 | Cooking Class | Cooking Class | 60 days | 28 days |
 | Olive Producer | Olive Producer | 60 days | 28 days |
-| Cultural Site / Garden | Cultural Site / Garden | 60 days | 28 days |
+| Cultural Site / Garden | Cultural Site / Garden | 30 days (includes final headcount; was 60 until 2026-10-03) | none (since 2026-10-03) |
 | Entertainment | Entertainment | 60 days | 28 days |
 | Transport | Transport | 210 days | 28 days |
 | Tour Guides | Tour Guides | 180 days | 28 days (final headcount, since 2026-09-30) |
